@@ -8,10 +8,10 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
 
 @WebListener
 public class DatabaseInitializer implements ServletContextListener {
@@ -31,6 +31,7 @@ public class DatabaseInitializer implements ServletContextListener {
         try {
             // Создаем SessionFactory — здесь Hibernate создаст таблицы
             sessionFactory = new Configuration().configure("hibernate.cfg.xml").buildSessionFactory();
+            sce.getServletContext().setAttribute("SessionFactory", sessionFactory);
 
             // Открываем сессию и транзакцию для инициализации данных
             try (Session session = sessionFactory.getCurrentSession()) {
@@ -54,6 +55,10 @@ public class DatabaseInitializer implements ServletContextListener {
 
 
             }
+
+            Map<UUID, MatchScore> currentMatches = new HashMap<>();
+            sce.getServletContext().setAttribute("currentMatches", currentMatches);
+
 
             System.out.println("Инициализация таблиц и данных выполнена успешно.");
         } catch (Exception e) {
