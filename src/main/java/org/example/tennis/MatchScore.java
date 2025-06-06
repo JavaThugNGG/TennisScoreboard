@@ -1,21 +1,92 @@
 package org.example.tennis;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+public class MatchScore {
+    String firstPlayerName;
+    String secondPlayerName;
 
-class MatchScore {
-    String playerOneId;
-    String playerTwoId;
+    int firstPlayerSets;
+    int secondPlayerSets;
 
-    public MatchScore(String playerOneId, String playerTwoId, int scorePlayerOne, int scorePlayerTwo) {
-        this.playerOneId = playerOneId;
-        this.playerTwoId = playerTwoId;
-        this.scorePlayerOne = scorePlayerOne;
-        this.scorePlayerTwo = scorePlayerTwo;
+    int firstPlayerGames;
+    int secondPlayerGames;
+
+    int firstPlayerPoints;
+    int secondPlayerPoints;
+
+
+    public MatchScore(String firstPlayerName, String secondPlayerName, int firstPlayerSets, int secondPlayerSets, int firstPlayerGames, int secondPlayerGames, int firstPlayerPoints, int secondPlayerPoints) {
+        this.firstPlayerName = firstPlayerName;
+        this.secondPlayerName = secondPlayerName;
+        this.firstPlayerSets = firstPlayerSets;
+        this.secondPlayerSets = secondPlayerSets;
+        this.firstPlayerGames = firstPlayerGames;
+        this.secondPlayerGames = secondPlayerGames;
+        this.firstPlayerPoints = firstPlayerPoints;
+        this.secondPlayerPoints = secondPlayerPoints;
     }
 
-    int scorePlayerOne;
-    int scorePlayerTwo;
+    public String getFirstPlayerName() {
+        return firstPlayerName;
+    }
+
+    public void setFirstPlayerName(String firstPlayerName) {
+        this.firstPlayerName = firstPlayerName;
+    }
+
+    public String getSecondPlayerName() {
+        return secondPlayerName;
+    }
+
+    public void setSecondPlayerName(String secondPlayerName) {
+        this.secondPlayerName = secondPlayerName;
+    }
+
+    public int getFirstPlayerSets() {
+        return firstPlayerSets;
+    }
+
+    public void setFirstPlayerSets(int firstPlayerSets) {
+        this.firstPlayerSets = firstPlayerSets;
+    }
+
+    public int getSecondPlayerSets() {
+        return secondPlayerSets;
+    }
+
+    public void setSecondPlayerSets(int secondPlayerSets) {
+        this.secondPlayerSets = secondPlayerSets;
+    }
+
+    public int getFirstPlayerGames() {
+        return firstPlayerGames;
+    }
+
+    public void setFirstPlayerGames(int firstPlayerGames) {
+        this.firstPlayerGames = firstPlayerGames;
+    }
+
+    public int getSecondPlayerGames() {
+        return secondPlayerGames;
+    }
+
+    public void setSecondPlayerGames(int secondPlayerGames) {
+        this.secondPlayerGames = secondPlayerGames;
+    }
+
+    public int getFirstPlayerPoints() {
+        return firstPlayerPoints;
+    }
+
+    public void setFirstPlayerPoints(int firstPlayerPoints) {
+        this.firstPlayerPoints = firstPlayerPoints;
+    }
+
+    public int getSecondPlayerPoints() {
+        return secondPlayerPoints;
+    }
+
+    public void setSecondPlayerPoints(int secondPlayerPoints) {
+        this.secondPlayerPoints = secondPlayerPoints;
+    }
 }
 

@@ -83,11 +83,12 @@ public class NewMatchServlet extends HttpServlet {
 
 
         UUID uuid = UUID.randomUUID();
-        MatchScore matchScore = new MatchScore(firstPlayerName, secondPlayerName, 0, 0);     //создали MatchScore (нейминг говно)
+        MatchScore matchScore = new MatchScore(firstPlayerName, secondPlayerName, 0, 0, 0, 0, 0, 0);     //создали MatchScore (нейминг говно)
         currentMatches.put(uuid, matchScore);                                                                           //добавили матч с айдишником
 
 
 
-        response.sendRedirect("/match-score?uuid=$match_id");
+        String contextPath = request.getContextPath();
+        response.sendRedirect(contextPath + "/match-score?uuid=" + uuid);
     }
 }
