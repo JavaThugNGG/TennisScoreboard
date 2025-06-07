@@ -21,7 +21,7 @@ public class MatchScoreServlet extends HttpServlet {
         sessionFactory = (SessionFactory) getServletContext().getAttribute("SessionFactory");
         currentMatches = (Map<UUID, MatchScore>) getServletContext().getAttribute("currentMatches");
 
-        String uuidParameter = request.getParameter("uuid");
+        String uuidParameter = request.getParameter("uuid");                  //нейминг нормальный напишешь
 
         if (uuidParameter == null  || uuidParameter.isBlank()) {               //валидация на корректность параметров
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Параметр uuid пуст.");
@@ -45,12 +45,44 @@ public class MatchScoreServlet extends HttpServlet {
 
 
         request.setAttribute("match", matchScore);   //ключ значение положили значение для передачи
-
         request.getRequestDispatcher("/WEB-INF/match-score.jsp").forward(request, response);   //передаем запрос на другой ресурс через диспетчер
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        sessionFactory = (SessionFactory) getServletContext().getAttribute("SessionFactory");
+        currentMatches = (Map<UUID, MatchScore>) getServletContext().getAttribute("currentMatches");
+
+        String uuidParameter = request.getParameter("uuid");
+
+        UUID uuid;
+        try {
+            uuid = UUID.fromString(uuidParameter);
+        } catch (IllegalArgumentException e) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Неверный формат UUID.");
+            return;
+        }
+
+        MatchScore matchScore = currentMatches.get(uuid);
+
+        if (matchScore == null) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND, "match score null");
+            return;
+        }
+
+        String scoredParameter = request.getParameter("scoredPlayer");
+
+        if (scoredParameter == null  || scoredParameter.isBlank()) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST, "Неверный параметр scoredPlayer.");
+            return;
+        }
+
+        //логика увеличения
+
+        response.setStatus(HttpServletResponse.SC_ACCEPTED);
+
+
+
 
     }
 
