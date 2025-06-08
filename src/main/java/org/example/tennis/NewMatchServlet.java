@@ -22,6 +22,11 @@ public class NewMatchServlet extends HttpServlet {
     private Map<UUID, MatchScore> currentMatches;
 
     @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.getRequestDispatcher("/new-match.html").forward(request, response);
+    }
+
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         sessionFactory = (SessionFactory) getServletContext().getAttribute("SessionFactory");
