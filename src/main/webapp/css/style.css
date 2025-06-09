@@ -223,7 +223,7 @@ footer {
     margin-top: 20px;
     background-image: url('../images/scorekeeper.png');
     background-position: center;
-    min-height: 30vh;
+    height: 270px;
     background-size: cover;
 }
 
