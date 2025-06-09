@@ -91,6 +91,29 @@ public class MatchScoreServlet extends HttpServlet {
 
         if (firstPlayerId == intScoredId) {
             int currentPoints = matchScore.getFirstPlayerPoints();
+            if (currentPoints == 0) {
+                int newPoints = 15;
+                matchScore.setFirstPlayerPoints(newPoints);
+            } else if (currentPoints == 15) {
+                int newPoints = 30;
+                matchScore.setFirstPlayerPoints(newPoints);
+            } else if (currentPoints == 30) {
+                int newPoints = 40;
+                matchScore.setFirstPlayerPoints(newPoints);
+            } else if (currentPoints == 40) {
+                int secondPlayerPoints = matchScore.getSecondPlayerPoints();
+                if (secondPlayerPoints < 40) {
+                    int firstPlayerGames = matchScore.getFirstPlayerGames();
+                    int newFirstPlayerGames = firstPlayerGames + 1;
+                    matchScore.setFirstPlayerGames(newFirstPlayerGames);
+                    matchScore.setFirstPlayerPoints(0);
+                    matchScore.setSecondPlayerPoints(0);
+                } else if (secondPlayerPoints == 40) {
+                    //тут логику допишешь
+                }
+            }
+        }
+/*
             int newPoints = currentPoints + 1;
             matchScore.setFirstPlayerPoints(newPoints);
         } else if (secondPlayerId == intScoredId) {
@@ -98,39 +121,10 @@ public class MatchScoreServlet extends HttpServlet {
             int newPoints = currentPoints + 1;
             matchScore.setSecondPlayerPoints(newPoints);
         }
+*/
 
 
 
-        /*
-        try (Session session = sessionFactory.openSession()) {
-            session.beginTransaction();
-
-            String hql = """
-            select
-            from MatchEntity m
-            where player1.id = :playerId or player2.id = :playerId
-            """;
-
-
-            MatchEntity match = session.createQuery(hql, MatchEntity.class)
-                    .setParameter("playerId", scoredId)
-                    .getSingleResult();
-
-            PlayerEntity player = null;
-            if (match.getPlayer1().getId() == intScoredId) {
-                player = match.getPlayer1();
-            } else if (match.getPlayer2().getId() == intScoredId) {
-                player = match.getPlayer2();
-            }
-
-            int playerScore = player.get
-
-            session.getTransaction().commit();
-        } catch (Exception e) {
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Ошибка при обработке очка.");
-            e.printStackTrace();
-            return;
-        } */
 
 
         // После обработки можно редиректить на GET

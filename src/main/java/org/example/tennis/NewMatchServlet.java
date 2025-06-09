@@ -72,12 +72,6 @@ public class NewMatchServlet extends HttpServlet {
             }
             generatedId2 = player2Id;
 
-            // TODO: Здесь можно создать и сохранить MatchEntity, если нужно
-            // MatchEntity match = new MatchEntity();
-            // match.setPlayer1(session.get(PlayerEntity.class, generatedId1));
-            // match.setPlayer2(session.get(PlayerEntity.class, generatedId2));
-            // session.persist(match);
-
             session.getTransaction().commit();
 
         } catch (Exception e) {
