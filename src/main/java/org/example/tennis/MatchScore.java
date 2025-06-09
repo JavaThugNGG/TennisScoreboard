@@ -1,8 +1,8 @@
 package org.example.tennis;
 
 public class MatchScore {
-    String firstPlayerName;
-    String secondPlayerName;
+    int firstPlayerId;
+    int secondPlayerId;
 
     int firstPlayerSets;
     int secondPlayerSets;
@@ -14,9 +14,9 @@ public class MatchScore {
     int secondPlayerPoints;
 
 
-    public MatchScore(String firstPlayerName, String secondPlayerName, int firstPlayerSets, int secondPlayerSets, int firstPlayerGames, int secondPlayerGames, int firstPlayerPoints, int secondPlayerPoints) {
-        this.firstPlayerName = firstPlayerName;
-        this.secondPlayerName = secondPlayerName;
+    public MatchScore(int firstPlayerId, int secondPlayerId, int firstPlayerSets, int secondPlayerSets, int firstPlayerGames, int secondPlayerGames, int firstPlayerPoints, int secondPlayerPoints) {
+        this.firstPlayerId = firstPlayerId;
+        this.secondPlayerId = secondPlayerId;
         this.firstPlayerSets = firstPlayerSets;
         this.secondPlayerSets = secondPlayerSets;
         this.firstPlayerGames = firstPlayerGames;
@@ -25,20 +25,20 @@ public class MatchScore {
         this.secondPlayerPoints = secondPlayerPoints;
     }
 
-    public String getFirstPlayerName() {
-        return firstPlayerName;
+    public int getFirstPlayerId() {
+        return firstPlayerId;
     }
 
-    public void setFirstPlayerName(String firstPlayerName) {
-        this.firstPlayerName = firstPlayerName;
+    public void setFirstPlayerId(int firstPlayerId) {
+        this.firstPlayerId = firstPlayerId;
     }
 
-    public String getSecondPlayerName() {
-        return secondPlayerName;
+    public int getSecondPlayerId() {
+        return secondPlayerId;
     }
 
-    public void setSecondPlayerName(String secondPlayerName) {
-        this.secondPlayerName = secondPlayerName;
+    public void setSecondPlayerId(int secondPlayerId) {
+        this.secondPlayerId = secondPlayerId;
     }
 
     public int getFirstPlayerSets() {

@@ -47,27 +47,27 @@
                 </thead>
                 <tbody>
                 <tr class="player1">
-                    <td class="table-text">${match.firstPlayerName}</td>
+                    <td class="table-text">${match.firstPlayerId}</td>
                     <td class="table-text">${match.firstPlayerSets}</td>
                     <td class="table-text">${match.firstPlayerGames}</td>
                     <td class="table-text">${match.firstPlayerPoints}</td>
                     <td class="table-text">
-                        <form method="post" action="/match-score">
+                        <form method="post" action="#">
                             <input type="hidden" name="uuid" value="${param.uuid}" />
-                            <input type="hidden" name="scoredPlayer" value="playerOne" />
+                            <input type="hidden" name="scoredPlayerId" value="${match.firstPlayerId}" />
                             <button class="score-btn" type="submit">Score</button>
                         </form>
                     </td>
                 </tr>
                 <tr class="player2">
-                    <td class="table-text">${match.secondPlayerName}</td>
+                    <td class="table-text">${match.secondPlayerId}</td>
                     <td class="table-text">${match.secondPlayerSets}</td>
                     <td class="table-text">${match.secondPlayerGames}</td>
                     <td class="table-text">${match.secondPlayerPoints}</td>
                     <td class="table-text">
-                        <form method="post" action="/match-score">
+                        <form method="post" action="#">
                             <input type="hidden" name="uuid" value="${param.uuid}" />
-                            <input type="hidden" name="scoredPlayer" value="playerTwo" />
+                            <input type="hidden" name="scoredPlayerId" value="${match.secondPlayerId}" />
                             <button class="score-btn" type="submit">Score</button>
                         </form>
                     </td>

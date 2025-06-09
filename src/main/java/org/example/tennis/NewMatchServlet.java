@@ -7,11 +7,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -28,70 +26,69 @@ public class NewMatchServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
         sessionFactory = (SessionFactory) getServletContext().getAttribute("SessionFactory");
         currentMatches = (Map<UUID, MatchScore>) getServletContext().getAttribute("currentMatches");
 
         String firstPlayerName = request.getParameter("playerOne");
         String secondPlayerName = request.getParameter("playerTwo");
 
-        if (firstPlayerName == null || secondPlayerName == null || firstPlayerName.isBlank() || secondPlayerName.isBlank()) {   //валидация на корректность параметров
+        if (firstPlayerName == null || secondPlayerName == null || firstPlayerName.isBlank() || secondPlayerName.isBlank()) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Player names are required.");
             return;
         }
 
-        try (Session session = sessionFactory.getCurrentSession()) {           //вот тут была валидация (с firstPlayer'ом сделал, не знаю какого передадут)
+        int generatedId1;
+        int generatedId2;
+
+        try {
+            Session session = sessionFactory.getCurrentSession();
             session.beginTransaction();
 
-            String hql1 = """
-                FROM PlayerEntity
-                WHERE name = :name
-            """;
-            Query<PlayerEntity> query1 = session.createQuery(hql1, PlayerEntity.class);
-            query1.setParameter("name", firstPlayerName);
-
-            PlayerEntity player1 = query1.uniqueResult();
-
-
-            if (player1 != null) {
-                System.out.println("Игрок1 уже существует в таблице игроков!");
-                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                return;
+            // Получаем или создаём первого игрока
+            Integer player1Id;
+            try {
+                String hql1 = "SELECT id FROM PlayerEntity WHERE name = :name";
+                Query<Integer> query1 = session.createQuery(hql1, Integer.class);
+                query1.setParameter("name", firstPlayerName);
+                player1Id = query1.getSingleResult();
+            } catch (jakarta.persistence.NoResultException e) {
+                PlayerEntity player1 = new PlayerEntity(firstPlayerName);
+                session.persist(player1);
+                player1Id = player1.getId();
             }
+            generatedId1 = player1Id;
 
-            player1 = new PlayerEntity(firstPlayerName);
-            session.persist(player1);                        //сохранили игрока в бд
-
-
-
-            String hql2 = """
-                FROM PlayerEntity
-                WHERE name = :name
-            """;
-            Query<PlayerEntity> query2 = session.createQuery(hql2, PlayerEntity.class);
-            query2.setParameter("name", secondPlayerName);
-
-            PlayerEntity player2 = query2.uniqueResult();
-
-
-            if (player2 != null) {
-                System.out.println("Игрок2 уже суещствует в таблице игроков!");
-                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                return;
+            // Получаем или создаём второго игрока
+            Integer player2Id;
+            try {
+                String hql2 = "SELECT id FROM PlayerEntity WHERE name = :name";
+                Query<Integer> query2 = session.createQuery(hql2, Integer.class);
+                query2.setParameter("name", secondPlayerName);
+                player2Id = query2.getSingleResult();
+            } catch (jakarta.persistence.NoResultException e) {
+                PlayerEntity player2 = new PlayerEntity(secondPlayerName);
+                session.persist(player2);
+                player2Id = player2.getId();
             }
+            generatedId2 = player2Id;
 
-            player2 = new PlayerEntity(secondPlayerName);
-            session.persist(player2);                        //сохранили игрока в бд
+            // TODO: Здесь можно создать и сохранить MatchEntity, если нужно
+            // MatchEntity match = new MatchEntity();
+            // match.setPlayer1(session.get(PlayerEntity.class, generatedId1));
+            // match.setPlayer2(session.get(PlayerEntity.class, generatedId2));
+            // session.persist(match);
 
             session.getTransaction().commit();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Internal server error.");
+            return;
         }
 
-
         UUID uuid = UUID.randomUUID();
-        MatchScore matchScore = new MatchScore(firstPlayerName, secondPlayerName, 0, 0, 0, 0, 0, 0);     //создали MatchScore (нейминг говно)
-        currentMatches.put(uuid, matchScore);                                                                           //добавили матч с айдишником
-
-
+        MatchScore matchScore = new MatchScore(generatedId1, generatedId2, 0, 0, 0, 0, 0, 0);
+        currentMatches.put(uuid, matchScore);
 
         String contextPath = request.getContextPath();
         response.sendRedirect(contextPath + "/match-score?uuid=" + uuid);

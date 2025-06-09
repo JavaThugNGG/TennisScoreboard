@@ -11,6 +11,7 @@ public class PlayerEntity {
     @Id
     @GeneratedValue
     private int id;
+    @Column(unique = true, nullable = false)
     private String name;
     @OneToMany(mappedBy = "player1")
     private List<MatchEntity> matchesAsPlayer1 = new ArrayList<>();
