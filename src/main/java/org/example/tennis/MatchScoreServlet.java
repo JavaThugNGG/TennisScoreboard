@@ -14,6 +14,9 @@ import java.util.UUID;
 
 @WebServlet("/match-score")
 public class MatchScoreServlet extends HttpServlet {
+    private int firstPlayerAdvantage = 0;
+    private int secondPlayerAdvantage = 0;
+
 
     private SessionFactory sessionFactory;
     private Map<UUID, MatchScore> currentMatches;
@@ -89,7 +92,7 @@ public class MatchScoreServlet extends HttpServlet {
         int firstPlayerId = matchScore.getFirstPlayerId();
         int secondPlayerId = matchScore.getSecondPlayerId();
 
-        if (firstPlayerId == intScoredId) {
+        if (intScoredId == firstPlayerId) {
             int currentPoints = matchScore.getFirstPlayerPoints();
             if (currentPoints == 0) {
                 int newPoints = 15;
@@ -109,19 +112,53 @@ public class MatchScoreServlet extends HttpServlet {
                     matchScore.setFirstPlayerPoints(0);
                     matchScore.setSecondPlayerPoints(0);
                 } else if (secondPlayerPoints == 40) {
-                    //тут логику допишешь
+                    if (firstPlayerAdvantage - secondPlayerAdvantage == 2) {
+                        int firstPlayerCurrentGames = matchScore.getFirstPlayerGames();
+                        int newFirstPlayerGames = firstPlayerCurrentGames + 1;
+                        matchScore.setFirstPlayerGames(newFirstPlayerGames);
+                        firstPlayerAdvantage = 0;
+                        secondPlayerAdvantage = 0;
+                        matchScore.setFirstPlayerPoints(0);
+                        matchScore.setSecondPlayerPoints(0);
+                    } else {
+                        firstPlayerAdvantage++;
+                    }
+                }
+            }
+        } else if (intScoredId == secondPlayerId) {
+            int currentPoints = matchScore.getSecondPlayerPoints();
+            if (currentPoints == 0) {
+                int newPoints = 15;
+                matchScore.setSecondPlayerPoints(newPoints);
+            } else if (currentPoints == 15) {
+                int newPoints = 30;
+                matchScore.setSecondPlayerPoints(newPoints);
+            } else if (currentPoints == 30) {
+                int newPoints = 40;
+                matchScore.setSecondPlayerPoints(newPoints);
+            } else if (currentPoints == 40) {
+                int firstPlayerPoints = matchScore.getFirstPlayerPoints();
+                if (firstPlayerPoints < 40) {
+                    int secondPlayerGames = matchScore.getSecondPlayerGames();
+                    int newSecondPlayerGames = secondPlayerGames + 1;
+                    matchScore.setSecondPlayerGames(newSecondPlayerGames);
+                    matchScore.setFirstPlayerPoints(0);
+                    matchScore.setSecondPlayerPoints(0);
+                } else if (firstPlayerPoints == 40) {
+                    if (secondPlayerAdvantage - firstPlayerAdvantage == 2) {
+                        int secondPlayerCurrentGames = matchScore.getSecondPlayerGames();
+                        int newSecondPlayerGames = secondPlayerCurrentGames + 1;
+                        matchScore.setSecondPlayerGames(newSecondPlayerGames);
+                        firstPlayerAdvantage = 0;
+                        secondPlayerAdvantage = 0;
+                        matchScore.setFirstPlayerPoints(0);
+                        matchScore.setSecondPlayerPoints(0);
+                    } else {
+                        secondPlayerAdvantage++;
+                    }
                 }
             }
         }
-/*
-            int newPoints = currentPoints + 1;
-            matchScore.setFirstPlayerPoints(newPoints);
-        } else if (secondPlayerId == intScoredId) {
-            int currentPoints = matchScore.getSecondPlayerPoints();
-            int newPoints = currentPoints + 1;
-            matchScore.setSecondPlayerPoints(newPoints);
-        }
-*/
 
 
 
