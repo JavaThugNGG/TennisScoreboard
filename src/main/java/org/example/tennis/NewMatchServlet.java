@@ -17,7 +17,7 @@ import java.util.UUID;
 public class NewMatchServlet extends HttpServlet {
 
     private SessionFactory sessionFactory;
-    private Map<UUID, MatchScore> currentMatches;
+    private Map<UUID, MatchScoreModel> currentMatches;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -27,7 +27,7 @@ public class NewMatchServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         sessionFactory = (SessionFactory) getServletContext().getAttribute("SessionFactory");
-        currentMatches = (Map<UUID, MatchScore>) getServletContext().getAttribute("currentMatches");
+        currentMatches = (Map<UUID, MatchScoreModel>) getServletContext().getAttribute("currentMatches");
 
         String firstPlayerName = request.getParameter("playerOne");
         String secondPlayerName = request.getParameter("playerTwo");
@@ -81,8 +81,8 @@ public class NewMatchServlet extends HttpServlet {
         }
 
         UUID uuid = UUID.randomUUID();
-        MatchScore matchScore = new MatchScore(generatedId1, generatedId2, 0, 0, 0, 0, 0, 0);
-        currentMatches.put(uuid, matchScore);
+        MatchScoreModel matchScoreModel = new MatchScoreModel(generatedId1, generatedId2, 0, 0, 0, 0, 0, 0);
+        currentMatches.put(uuid, matchScoreModel);
 
         String contextPath = request.getContextPath();
         response.sendRedirect(contextPath + "/match-score?uuid=" + uuid);

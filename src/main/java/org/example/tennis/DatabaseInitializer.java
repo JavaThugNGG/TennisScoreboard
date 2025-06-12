@@ -56,7 +56,7 @@ public class DatabaseInitializer implements ServletContextListener {
 
             }
 
-            Map<UUID, MatchScore> currentMatches = new HashMap<>();
+            Map<UUID, MatchScoreModel> currentMatches = new HashMap<>();
             sce.getServletContext().setAttribute("currentMatches", currentMatches);
 
 

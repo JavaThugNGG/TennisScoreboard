@@ -1,6 +1,6 @@
 package org.example.tennis;
 
-public class MatchScore {
+public class MatchScoreModel {
     int firstPlayerId;
     int secondPlayerId;
 
@@ -14,7 +14,7 @@ public class MatchScore {
     int secondPlayerPoints;
 
 
-    public MatchScore(int firstPlayerId, int secondPlayerId, int firstPlayerSets, int secondPlayerSets, int firstPlayerGames, int secondPlayerGames, int firstPlayerPoints, int secondPlayerPoints) {
+    public MatchScoreModel(int firstPlayerId, int secondPlayerId, int firstPlayerSets, int secondPlayerSets, int firstPlayerGames, int secondPlayerGames, int firstPlayerPoints, int secondPlayerPoints) {
         this.firstPlayerId = firstPlayerId;
         this.secondPlayerId = secondPlayerId;
         this.firstPlayerSets = firstPlayerSets;
