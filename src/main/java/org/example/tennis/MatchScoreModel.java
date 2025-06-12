@@ -1,5 +1,7 @@
 package org.example.tennis;
 
+import java.util.UUID;
+
 public class MatchScoreModel {
     int firstPlayerId;
     int secondPlayerId;

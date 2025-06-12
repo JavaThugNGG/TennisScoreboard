@@ -8,9 +8,9 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 @WebListener
@@ -56,7 +56,7 @@ public class DatabaseInitializer implements ServletContextListener {
 
             }
 
-            Map<UUID, MatchScoreModel> currentMatches = new HashMap<>();
+            Map<UUID, MatchScoreModel> currentMatches = new ConcurrentHashMap<>();      //передали мапу
             sce.getServletContext().setAttribute("currentMatches", currentMatches);
 
 

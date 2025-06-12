@@ -13,11 +13,11 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.UUID;
 
+
 @WebServlet("/new-match")
 public class NewMatchServlet extends HttpServlet {
-
     private SessionFactory sessionFactory;
-    private Map<UUID, MatchScoreModel> currentMatches;
+
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -27,7 +27,6 @@ public class NewMatchServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         sessionFactory = (SessionFactory) getServletContext().getAttribute("SessionFactory");
-        currentMatches = (Map<UUID, MatchScoreModel>) getServletContext().getAttribute("currentMatches");
 
         String firstPlayerName = request.getParameter("playerOne");
         String secondPlayerName = request.getParameter("playerTwo");
@@ -80,11 +79,25 @@ public class NewMatchServlet extends HttpServlet {
             return;
         }
 
-        UUID uuid = UUID.randomUUID();
+
+
+
         MatchScoreModel matchScoreModel = new MatchScoreModel(generatedId1, generatedId2, 0, 0, 0, 0, 0, 0);
-        currentMatches.put(uuid, matchScoreModel);
+
+        @SuppressWarnings("unchecked")
+        Map<UUID, MatchScoreModel> currentMatches = (Map<UUID, MatchScoreModel>) getServletContext().getAttribute("currentMatches");
+
+        OngoingMatchesService ongoingMatchesService = new OngoingMatchesService(currentMatches);    //в сервис закинули мапу
+
+        UUID pastedId = ongoingMatchesService.addMatch(matchScoreModel);
+
+        Map<UUID, MatchScoreModel> newCurrentMatches = ongoingMatchesService.getCurrentMatches();
+
+
+        getServletContext().setAttribute("currentMatches", newCurrentMatches);
+
 
         String contextPath = request.getContextPath();
-        response.sendRedirect(contextPath + "/match-score?uuid=" + uuid);
+        response.sendRedirect(contextPath + "/match-score?uuid=" + pastedId);
     }
 }
