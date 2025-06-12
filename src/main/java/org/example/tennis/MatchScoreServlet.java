@@ -33,7 +33,8 @@ public class MatchScoreServlet extends HttpServlet {
     @Override
     public void init() throws ServletException {
         super.init();
-        currentMatches = (Map<UUID, MatchScoreModel>) getServletContext().getAttribute("currentMatches");
+        OngoingMatchesService ongoingMatchesService = (OngoingMatchesService) getServletContext().getAttribute("ongoingMatchesService");
+        currentMatches = ongoingMatchesService.getCurrentMatches();
     }
 
 
