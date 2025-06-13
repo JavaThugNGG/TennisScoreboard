@@ -1,40 +1,16 @@
 package org.example.tennis;
 
-import org.hibernate.Session;
-
 public class MatchScoreCalculationService {
+    MatchStateValidator matchStateValidator = new MatchStateValidator();
 
-    //реализует логику подсчёта счёта матча по очкам/геймам/сетам
-
-    //для advantage придется заводить мапу или добавть доп поле в MatchScoreModel, что наверное получше!
-
-
-    //кидать Exception будет когда матч закончится
-
-    //вызывается из сервлета при тыке на скоринг игрока
-
-    //мб в конструктор класса MatchScoreModel пихать в не в параметры метода передавать ???
-
-    public void scoringFirstPlayer(MatchScoreModel matchScoreModel) {
-
+    public void scoringFirstPlayer(MatchScoreModel matchScoreModel) {   //для тестов передается matchScore и смотрим что например не обновился как и надо при 40:40
         scoringFirstPlayerGo(matchScoreModel);
-
-        if (matchScoreModel.getFirstPlayerSets() == 2) {                                                         //выигрыш
-            if ((matchScoreModel.getSecondPlayerSets() == 0) || (matchScoreModel.getSecondPlayerSets() == 1)) {
-                throw new MatchAlreadyFinishedException();
-            }
-        }
+        matchStateValidator.validateMatchNotFinished(matchScoreModel);
     }
 
     public void scoringSecondPlayer(MatchScoreModel matchScoreModel) {
-
         scoringSecondPlayerGo(matchScoreModel);
-
-        if (matchScoreModel.getSecondPlayerSets() == 2) {                                                         //выигрыш
-            if ((matchScoreModel.getFirstPlayerSets() == 0) || (matchScoreModel.getFirstPlayerSets() == 1)) {
-                throw new MatchAlreadyFinishedException();
-            }
-        }
+        matchStateValidator.validateMatchNotFinished(matchScoreModel);
     }
 
     private void scoringFirstPlayerGo(MatchScoreModel matchScoreModel) {
@@ -94,7 +70,7 @@ public class MatchScoreCalculationService {
             matchScoreModel.setSecondPlayerPoints(newPoints);
         }
 
-        if (currentPoints == 40) {                      //геймы обновляются только тут
+        if (currentPoints == 40) {
             int firstPlayerPoints = matchScoreModel.getFirstPlayerPoints();
 
             if (firstPlayerPoints < 40) {
@@ -126,7 +102,7 @@ public class MatchScoreCalculationService {
         }
 
 
-        int firstPlayerGames = matchScoreModel.getFirstPlayerGames();    //обновляем гейм в первого
+        int firstPlayerGames = matchScoreModel.getFirstPlayerGames();
         int newFirstPlayerGames = firstPlayerGames + 1;
         matchScoreModel.setFirstPlayerGames(newFirstPlayerGames);
         matchScoreModel.setFirstPlayerPoints(0);
@@ -145,7 +121,7 @@ public class MatchScoreCalculationService {
         }
 
 
-        int secondPlayerGames = matchScoreModel.getSecondPlayerGames();    //обновляем гейм в первого
+        int secondPlayerGames = matchScoreModel.getSecondPlayerGames();
         int newSecondPlayerGames = secondPlayerGames + 1;
         matchScoreModel.setSecondPlayerGames(newSecondPlayerGames);
         matchScoreModel.setFirstPlayerPoints(0);
