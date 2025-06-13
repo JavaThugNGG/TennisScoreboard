@@ -15,16 +15,15 @@ import java.util.UUID;
 @WebServlet("/match-score")
 public class MatchScoreServlet extends HttpServlet {
 
+
+    OngoingMatchesService ongoingMatchesService;
+
     @SuppressWarnings("unchecked")
     private Map<UUID, MatchScoreModel> currentMatches;
 
     MatchScoreModel matchScoreModel;
 
-    private int firstPlayerAdvantage = 0;
-    private int secondPlayerAdvantage = 0;
 
-    private int firstPlayerTaibreak;
-    private int secondPlayerTaibreak;
 
 
     private SessionFactory sessionFactory;
@@ -33,7 +32,7 @@ public class MatchScoreServlet extends HttpServlet {
     @Override
     public void init() throws ServletException {
         super.init();
-        OngoingMatchesService ongoingMatchesService = (OngoingMatchesService) getServletContext().getAttribute("ongoingMatchesService");
+        ongoingMatchesService = (OngoingMatchesService) getServletContext().getAttribute("ongoingMatchesService");
         currentMatches = ongoingMatchesService.getCurrentMatches();
     }
 
@@ -108,53 +107,13 @@ public class MatchScoreServlet extends HttpServlet {
         int firstPlayerId = matchScoreModel.getFirstPlayerId();
         int secondPlayerId = matchScoreModel.getSecondPlayerId();
 
+        MatchScoreCalculationService matchScoreCalculationService = new MatchScoreCalculationService();
+
 
         if (intScoredId == firstPlayerId) {
-            scoringFirstPlayer();
-
-            if (matchScoreModel.getFirstPlayerSets() == 2) {                                                         //выигрыш
-                if ((matchScoreModel.getSecondPlayerSets() == 0) || (matchScoreModel.getSecondPlayerSets() == 1)) {
-
-
-                    currentMatches.remove(uuid);   //удалили матч текущий
-
-
-                    Session session = sessionFactory.getCurrentSession();
-                    session.beginTransaction();
-
-                    PlayerEntity firstPlayer = session.get(PlayerEntity.class, firstPlayerId);
-                    PlayerEntity secondPlayer = session.get(PlayerEntity.class, secondPlayerId);
-
-                    MatchEntity matchEntity = new MatchEntity();
-                    matchEntity.setPlayer1(firstPlayer);
-                    matchEntity.setPlayer2(secondPlayer);
-                    matchEntity.setWinner(firstPlayer);
-
-                    session.persist(matchEntity);
-
-
-                    session.getTransaction().commit();
-
-
-                    request.setAttribute("match", matchScoreModel);
-                    request.setAttribute("firstPlayerResult", "winner!");
-                    request.setAttribute("secondPlayerResult", "lost!");
-
-                    request.getRequestDispatcher("/WEB-INF/match-result.jsp").forward(request, response);   //передаем запрос на другой ресурс через диспетчер
-                    return;
-                }
-            }
-        }
-
-        if (intScoredId == secondPlayerId) {
-            scoringSecondPlayer();
-
-            if (matchScoreModel.getSecondPlayerSets() == 2) {                                                         //выигрыш
-                if ((matchScoreModel.getFirstPlayerSets() == 0) || (matchScoreModel.getFirstPlayerSets() == 1)) {
-
-                currentMatches.remove(uuid);   //удалили матч текущий
-
-
+            try {
+                matchScoreCalculationService.scoringFirstPlayer(matchScoreModel);
+            } catch (MatchAlreadyFinishedException e) {
                 Session session = sessionFactory.getCurrentSession();
                 session.beginTransaction();
 
@@ -171,153 +130,48 @@ public class MatchScoreServlet extends HttpServlet {
 
                 session.getTransaction().commit();
 
+                ongoingMatchesService.deleteMatch(uuid);
+
+
+                request.setAttribute("match", matchScoreModel);
+                request.setAttribute("firstPlayerResult", "winner!");
+                request.setAttribute("secondPlayerResult", "lost!");
+
+                request.getRequestDispatcher("/WEB-INF/match-result.jsp").forward(request, response);   //передаем запрос на другой ресурс через диспетчер
+            }
+        }
+
+        if (intScoredId == secondPlayerId) {
+            try {
+                matchScoreCalculationService.scoringSecondPlayer(matchScoreModel);
+            } catch (MatchAlreadyFinishedException e) {
+                Session session = sessionFactory.getCurrentSession();
+                session.beginTransaction();
+
+                PlayerEntity firstPlayer = session.get(PlayerEntity.class, firstPlayerId);
+                PlayerEntity secondPlayer = session.get(PlayerEntity.class, secondPlayerId);
+
+                MatchEntity matchEntity = new MatchEntity();
+                matchEntity.setPlayer1(firstPlayer);
+                matchEntity.setPlayer2(secondPlayer);
+                matchEntity.setWinner(secondPlayer);
+
+                session.persist(matchEntity);
+
+
+                session.getTransaction().commit();
+
+                ongoingMatchesService.deleteMatch(uuid);
+
 
                 request.setAttribute("match", matchScoreModel);
                 request.setAttribute("firstPlayerResult", "lost!");
                 request.setAttribute("secondPlayerResult", "winner!");
 
-                request.getRequestDispatcher("/WEB-INF/match-result.jsp").forward(request, response);
-                return;
+                request.getRequestDispatcher("/WEB-INF/match-result.jsp").forward(request, response);   //передаем запрос на другой ресурс через диспетчер
             }
-            }
-
         }
-
         response.sendRedirect(request.getContextPath() + "/match-score?uuid=" + uuid);
-    }
-
-
-    private void scoringFirstPlayer() {
-
-            int currentPoints = matchScoreModel.getFirstPlayerPoints();
-
-            if (currentPoints == 0) {
-                int newPoints = 15;
-                matchScoreModel.setFirstPlayerPoints(newPoints);
-            }
-
-            if (currentPoints == 15) {
-                int newPoints = 30;
-                matchScoreModel.setFirstPlayerPoints(newPoints);
-            }
-
-            if (currentPoints == 30) {
-                int newPoints = 40;
-                matchScoreModel.setFirstPlayerPoints(newPoints);
-            }
-
-            if (currentPoints == 40) {                      //геймы обновляются только тут
-                int secondPlayerPoints = matchScoreModel.getSecondPlayerPoints();
-
-                if (secondPlayerPoints < 40) {
-                    updateFirstPlayerGames();
-                }
-
-                if (secondPlayerPoints == 40) {
-                    if (firstPlayerAdvantage - secondPlayerAdvantage == 2) {
-                        updateFirstPlayerGames();
-                    } else {
-                        firstPlayerAdvantage++;
-                    }
-                }
-            }
-    }
-
-    private void scoringSecondPlayer() {
-
-        int currentPoints = matchScoreModel.getSecondPlayerPoints();
-
-        if (currentPoints == 0) {
-            int newPoints = 15;
-            matchScoreModel.setSecondPlayerPoints(newPoints);
-        }
-
-        if (currentPoints == 15) {
-            int newPoints = 30;
-            matchScoreModel.setSecondPlayerPoints(newPoints);
-        }
-
-        if (currentPoints == 30) {
-            int newPoints = 40;
-            matchScoreModel.setSecondPlayerPoints(newPoints);
-        }
-
-        if (currentPoints == 40) {                      //геймы обновляются только тут
-            int firstPlayerPoints = matchScoreModel.getFirstPlayerPoints();
-
-            if (firstPlayerPoints < 40) {
-                updateSecondPlayerGames();
-            }
-
-            if (firstPlayerPoints == 40) {
-                if (secondPlayerAdvantage - firstPlayerAdvantage == 2) {
-                    updateSecondPlayerGames();
-                } else {
-                    secondPlayerAdvantage++;
-                }
-            }
-        }
-    }
-
-    private void updateFirstPlayerGames() {
-        if ((matchScoreModel.getFirstPlayerGames() == 6) && (matchScoreModel.getSecondPlayerGames() == 6)) {
-            updateFirstSets();
-            return;
-        }
-
-        if ((matchScoreModel.getFirstPlayerGames() == 5) && (matchScoreModel.getFirstPlayerGames() - matchScoreModel.getSecondPlayerGames() >= 2)) {
-            updateFirstSets();
-            return;
-        }
-
-
-        int firstPlayerGames = matchScoreModel.getFirstPlayerGames();    //обновляем гейм в первого
-        int newFirstPlayerGames = firstPlayerGames + 1;
-        matchScoreModel.setFirstPlayerGames(newFirstPlayerGames);
-        matchScoreModel.setFirstPlayerPoints(0);
-        matchScoreModel.setSecondPlayerPoints(0);
-    }
-
-    private void updateSecondPlayerGames() {
-        if ((matchScoreModel.getSecondPlayerGames() == 6) && (matchScoreModel.getFirstPlayerGames() == 6)) {
-            updateSecondSets();
-            return;
-        }
-
-        if ((matchScoreModel.getSecondPlayerGames() == 5) && (matchScoreModel.getSecondPlayerGames() - matchScoreModel.getFirstPlayerGames() >= 2)) {
-            updateSecondSets();
-            return;
-        }
-
-
-        int secondPlayerGames = matchScoreModel.getSecondPlayerGames();    //обновляем гейм в первого
-        int newSecondPlayerGames = secondPlayerGames + 1;
-        matchScoreModel.setSecondPlayerGames(newSecondPlayerGames);
-        matchScoreModel.setFirstPlayerPoints(0);
-        matchScoreModel.setSecondPlayerPoints(0);
-    }
-
-
-    private void updateFirstSets() {
-        int firstPlayerCurrentSets = matchScoreModel.getFirstPlayerSets();
-        int newFirstPlayerSets = firstPlayerCurrentSets + 1;
-        matchScoreModel.setFirstPlayerSets(newFirstPlayerSets);
-
-        matchScoreModel.setFirstPlayerGames(0);
-        matchScoreModel.setSecondPlayerGames(0);
-        matchScoreModel.setFirstPlayerPoints(0);
-        matchScoreModel.setSecondPlayerPoints(0);
-    }
-
-    private void updateSecondSets() {
-        int secondPlayerCurrentSets = matchScoreModel.getSecondPlayerSets();
-        int newSecondPlayerSets = secondPlayerCurrentSets + 1;
-        matchScoreModel.setSecondPlayerSets(newSecondPlayerSets);
-
-        matchScoreModel.setFirstPlayerGames(0);
-        matchScoreModel.setSecondPlayerGames(0);
-        matchScoreModel.setFirstPlayerPoints(0);
-        matchScoreModel.setSecondPlayerPoints(0);
     }
 
 }

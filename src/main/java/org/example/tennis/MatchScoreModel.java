@@ -3,17 +3,20 @@ package org.example.tennis;
 import java.util.UUID;
 
 public class MatchScoreModel {
-    int firstPlayerId;
-    int secondPlayerId;
+    private int firstPlayerId;
+    private int secondPlayerId;
 
-    int firstPlayerSets;
-    int secondPlayerSets;
+    private int firstPlayerSets;
+    private int secondPlayerSets;
 
-    int firstPlayerGames;
-    int secondPlayerGames;
+    private int firstPlayerGames;
+    private int secondPlayerGames;
 
-    int firstPlayerPoints;
-    int secondPlayerPoints;
+    private int firstPlayerPoints;
+    private int secondPlayerPoints;
+
+    private int firstPlayerAdvantage = 0;
+    private int secondPlayerAdvantage = 0;
 
 
     public MatchScoreModel(int firstPlayerId, int secondPlayerId, int firstPlayerSets, int secondPlayerSets, int firstPlayerGames, int secondPlayerGames, int firstPlayerPoints, int secondPlayerPoints) {
@@ -89,6 +92,22 @@ public class MatchScoreModel {
 
     public void setSecondPlayerPoints(int secondPlayerPoints) {
         this.secondPlayerPoints = secondPlayerPoints;
+    }
+
+    public int getFirstPlayerAdvantage() {
+        return firstPlayerAdvantage;
+    }
+
+    public void setFirstPlayerAdvantage(int firstPlayerAdvantage) {
+        this.firstPlayerAdvantage = firstPlayerAdvantage;
+    }
+
+    public int getSecondPlayerAdvantage() {
+        return secondPlayerAdvantage;
+    }
+
+    public void setSecondPlayerAdvantage(int secondPlayerAdvantage) {
+        this.secondPlayerAdvantage = secondPlayerAdvantage;
     }
 }
 
