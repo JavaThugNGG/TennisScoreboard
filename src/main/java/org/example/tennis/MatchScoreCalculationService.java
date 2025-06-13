@@ -4,16 +4,16 @@ public class MatchScoreCalculationService {
     MatchStateValidator matchStateValidator = new MatchStateValidator();
 
     public void scoringFirstPlayer(MatchScoreModel matchScoreModel) {   //для тестов передается matchScore и смотрим что например не обновился как и надо при 40:40
-        scoringFirstPlayerGo(matchScoreModel);
+        scoringFirstPlayerPoints(matchScoreModel);
         matchStateValidator.validateMatchNotFinished(matchScoreModel);
     }
 
     public void scoringSecondPlayer(MatchScoreModel matchScoreModel) {
-        scoringSecondPlayerGo(matchScoreModel);
+        scoringSecondPlayerPoints(matchScoreModel);
         matchStateValidator.validateMatchNotFinished(matchScoreModel);
     }
 
-    private void scoringFirstPlayerGo(MatchScoreModel matchScoreModel) {
+    private void scoringFirstPlayerPoints(MatchScoreModel matchScoreModel) {
 
         int currentPoints = matchScoreModel.getFirstPlayerPoints();
 
@@ -32,7 +32,7 @@ public class MatchScoreCalculationService {
             matchScoreModel.setFirstPlayerPoints(newPoints);
         }
 
-        if (currentPoints == 40) {                      //геймы обновляются только тут
+        if (currentPoints == 40) {
             int secondPlayerPoints = matchScoreModel.getSecondPlayerPoints();
 
             if (secondPlayerPoints < 40) {
@@ -51,7 +51,7 @@ public class MatchScoreCalculationService {
         }
     }
 
-    private void scoringSecondPlayerGo(MatchScoreModel matchScoreModel) {
+    private void scoringSecondPlayerPoints(MatchScoreModel matchScoreModel) {
 
         int currentPoints = matchScoreModel.getSecondPlayerPoints();
 
@@ -92,12 +92,12 @@ public class MatchScoreCalculationService {
 
     private void updateFirstPlayerGames(MatchScoreModel matchScoreModel) {
         if ((matchScoreModel.getFirstPlayerGames() == 6) && (matchScoreModel.getSecondPlayerGames() == 6)) {
-            updateFirstSets(matchScoreModel);
+            updateFirstPlayerSets(matchScoreModel);
             return;
         }
 
         if ((matchScoreModel.getFirstPlayerGames() == 5) && (matchScoreModel.getFirstPlayerGames() - matchScoreModel.getSecondPlayerGames() >= 2)) {
-            updateFirstSets(matchScoreModel);
+            updateFirstPlayerSets(matchScoreModel);
             return;
         }
 
@@ -111,12 +111,12 @@ public class MatchScoreCalculationService {
 
     private void updateSecondPlayerGames(MatchScoreModel matchScoreModel) {
         if ((matchScoreModel.getSecondPlayerGames() == 6) && (matchScoreModel.getFirstPlayerGames() == 6)) {
-            updateSecondSets(matchScoreModel);
+            updateSecondPlayerSets(matchScoreModel);
             return;
         }
 
         if ((matchScoreModel.getSecondPlayerGames() == 5) && (matchScoreModel.getSecondPlayerGames() - matchScoreModel.getFirstPlayerGames() >= 2)) {
-            updateSecondSets(matchScoreModel);
+            updateSecondPlayerSets(matchScoreModel);
             return;
         }
 
@@ -129,7 +129,7 @@ public class MatchScoreCalculationService {
     }
 
 
-    private void updateFirstSets(MatchScoreModel matchScoreModel) {
+    private void updateFirstPlayerSets(MatchScoreModel matchScoreModel) {
         int firstPlayerCurrentSets = matchScoreModel.getFirstPlayerSets();
         int newFirstPlayerSets = firstPlayerCurrentSets + 1;
         matchScoreModel.setFirstPlayerSets(newFirstPlayerSets);
@@ -140,7 +140,7 @@ public class MatchScoreCalculationService {
         matchScoreModel.setSecondPlayerPoints(0);
     }
 
-    private void updateSecondSets(MatchScoreModel matchScoreModel) {
+    private void updateSecondPlayerSets(MatchScoreModel matchScoreModel) {
         int secondPlayerCurrentSets = matchScoreModel.getSecondPlayerSets();
         int newSecondPlayerSets = secondPlayerCurrentSets + 1;
         matchScoreModel.setSecondPlayerSets(newSecondPlayerSets);
