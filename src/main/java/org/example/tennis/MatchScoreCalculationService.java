@@ -107,6 +107,8 @@ public class MatchScoreCalculationService {
         matchScoreModel.setFirstPlayerGames(newFirstPlayerGames);
         matchScoreModel.setFirstPlayerPoints(0);
         matchScoreModel.setSecondPlayerPoints(0);
+        matchScoreModel.setFirstPlayerAdvantage(0);
+        matchScoreModel.setSecondPlayerAdvantage(0);
     }
 
     private void updateSecondPlayerGames(MatchScoreModel matchScoreModel) {
@@ -126,6 +128,8 @@ public class MatchScoreCalculationService {
         matchScoreModel.setSecondPlayerGames(newSecondPlayerGames);
         matchScoreModel.setFirstPlayerPoints(0);
         matchScoreModel.setSecondPlayerPoints(0);
+        matchScoreModel.setFirstPlayerAdvantage(0);
+        matchScoreModel.setSecondPlayerAdvantage(0);
     }
 
 
