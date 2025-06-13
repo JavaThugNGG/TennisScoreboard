@@ -96,7 +96,7 @@ public class MatchScoreCalculationService {
             return;
         }
 
-        if ((matchScoreModel.getFirstPlayerGames() == 5) && (matchScoreModel.getFirstPlayerGames() - matchScoreModel.getSecondPlayerGames() >= 2)) {
+        if ((matchScoreModel.getFirstPlayerGames() == 5) && (matchScoreModel.getFirstPlayerGames() - matchScoreModel.getSecondPlayerGames() >= 1)) {
             updateFirstPlayerSets(matchScoreModel);
             return;
         }
@@ -117,7 +117,7 @@ public class MatchScoreCalculationService {
             return;
         }
 
-        if ((matchScoreModel.getSecondPlayerGames() == 5) && (matchScoreModel.getSecondPlayerGames() - matchScoreModel.getFirstPlayerGames() >= 2)) {
+        if ((matchScoreModel.getSecondPlayerGames() == 5) && (matchScoreModel.getSecondPlayerGames() - matchScoreModel.getFirstPlayerGames() >= 1)) {
             updateSecondPlayerSets(matchScoreModel);
             return;
         }
