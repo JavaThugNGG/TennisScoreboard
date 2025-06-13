@@ -91,8 +91,6 @@ public class NewMatchServlet extends HttpServlet {
 
         UUID pastedId = ongoingMatchesService.addMatch(matchScoreModel);
 
-        getServletContext().removeAttribute("currentMatches");
-
         getServletContext().setAttribute("ongoingMatchesService", ongoingMatchesService);
 
 
