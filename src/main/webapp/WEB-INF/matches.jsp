@@ -35,14 +35,19 @@
 <main>
     <div class="container">
         <h1>Matches</h1>
-        <div class="input-container">
-            <input class="input-filter" placeholder="Filter by name" type="text" />
+
+        <form method="get" action="#" class="input-container">
+            <input
+                    class="input-filter"
+                    placeholder="Filter by name"
+                    type="text"
+                    name="filter_by_player_name"
+                    value="" />
             <div>
-                <a href="#">
-                    <button class="btn-filter">Reset Filter</button>
-                </a>
+                <button type="submit" class="btn-filter">Filter</button>
+                <button type="button" class="btn-filter" onclick="window.location.href='${pageContext.request.contextPath}/matches'">Reset Filter</button>
             </div>
-        </div>
+        </form>
 
         <table class="table-matches">
             <tr>
