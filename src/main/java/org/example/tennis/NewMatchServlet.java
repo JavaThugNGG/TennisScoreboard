@@ -26,7 +26,7 @@ public class NewMatchServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        sessionFactory = (SessionFactory) getServletContext().getAttribute("SessionFactory");
+        sessionFactory = (SessionFactory) getServletContext().getAttribute("sessionFactory");
 
         String firstPlayerName = request.getParameter("playerOne");
         String secondPlayerName = request.getParameter("playerTwo");

@@ -26,7 +26,7 @@ public class MatchesServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        sessionFactory = (SessionFactory) getServletContext().getAttribute("SessionFactory");
+        sessionFactory = (SessionFactory) getServletContext().getAttribute("sessionFactory");
 
         String page = request.getParameter("page");
 

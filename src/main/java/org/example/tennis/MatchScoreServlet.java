@@ -40,7 +40,7 @@ public class MatchScoreServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        sessionFactory = (SessionFactory) getServletContext().getAttribute("SessionFactory");
+        sessionFactory = (SessionFactory) getServletContext().getAttribute("sessionFactory");
 
         String uuidParameter = request.getParameter("uuid");                  //нейминг нормальный напишешь
 
@@ -71,7 +71,7 @@ public class MatchScoreServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        sessionFactory = (SessionFactory) getServletContext().getAttribute("SessionFactory");
+        sessionFactory = (SessionFactory) getServletContext().getAttribute("sessionFactory");
 
         String uuidParameter = request.getParameter("uuid");
         String scoredId = request.getParameter("scoredPlayerId");     //игрок, которому надо увеличить очки, нужно в MatchScore его найти по UUID матча и увеличить ему очко
