@@ -18,7 +18,6 @@ import java.util.UUID;
 public class NewMatchServlet extends HttpServlet {
     private SessionFactory sessionFactory;
 
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.getRequestDispatcher("/new-match.html").forward(request, response);
@@ -26,7 +25,7 @@ public class NewMatchServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        sessionFactory = (SessionFactory) getServletContext().getAttribute("sessionFactory");
+        sessionFactory = SessionFactoryManager.getInstance().getSessionFactory();
 
         String firstPlayerName = request.getParameter("playerOne");
         String secondPlayerName = request.getParameter("playerTwo");
@@ -84,7 +83,6 @@ public class NewMatchServlet extends HttpServlet {
 
         MatchScoreModel matchScoreModel = new MatchScoreModel(generatedId1, generatedId2, 0, 0, 0, 0, 0, 0);
 
-        @SuppressWarnings("unchecked")
         Map<UUID, MatchScoreModel> currentMatches = (Map<UUID, MatchScoreModel>) getServletContext().getAttribute("currentMatches");
 
         OngoingMatchesService ongoingMatchesService = new OngoingMatchesService(currentMatches);    //в сервис закинули мапу
