@@ -22,7 +22,8 @@ public class MatchesServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         SessionFactory sessionFactory = SessionFactoryManager.getInstance().getSessionFactory();
-        MatchesService matchesService = new MatchesService(sessionFactory);
+        MatchService matchService = new MatchService(sessionFactory);
+        PlayerService playerService = new PlayerService(sessionFactory);
 
         String page = request.getParameter("page");                             //валидацию потом прикрутим
         String playerNameFilter = request.getParameter("filter_by_player_name");
@@ -31,10 +32,9 @@ public class MatchesServlet extends HttpServlet {
         int paginationStartIndex = (currentPage - 1) * MATCHES_PER_PAGE;
 
 
-
         if (playerNameFilter == null) {          //то фильтровать не надо  (метод showPageWithoutPlayerNameFilter)  вообще валидатор тут потом сделаешь
-            List<MatchEntity> matches = matchesService.getPageOfMatches(paginationStartIndex);
-            long totalMatches = matchesService.getTotalMatches();          //сделаешь обработку ошибок если вернулся пустой список этот случай нужно предусмотреть а то NPE будет
+            List<MatchEntity> matches = matchService.getPage(paginationStartIndex);
+            long totalMatches = matchService.count();          //сделаешь обработку ошибок если вернулся пустой список этот случай нужно предусмотреть а то NPE будет
 
             totalPages = countTotalPages(totalMatches);
 
@@ -51,9 +51,9 @@ public class MatchesServlet extends HttpServlet {
 
         if (playerNameFilter != null) {     //то фильтровать надо
 
-            PlayerEntity player = matchesService.getPlayerByName(playerNameFilter);
-            List<MatchEntity> matches = matchesService.getPageOfMatchesWithPlayerNameFilter(player, paginationStartIndex);
-            long totalMatches = matchesService.getTotalMatchesWithPlayerNameFilter(player);
+            PlayerEntity player = playerService.getByName(playerNameFilter);
+            List<MatchEntity> matches = matchService.getPageWithPlayerFilter(player, paginationStartIndex);
+            long totalMatches = matchService.countWithPlayerFilter(player);
 
             totalPages = countTotalPages(totalMatches);
 

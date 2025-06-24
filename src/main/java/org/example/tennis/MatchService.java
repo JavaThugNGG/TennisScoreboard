@@ -5,20 +5,20 @@ import org.hibernate.SessionFactory;
 
 import java.util.List;
 
-public class MatchesService {                                                 // вынесение логики открытия закрытия Session и обертка для эксепшенов
+public class MatchService {                                                 // вынесение логики открытия закрытия Session и обертка для эксепшенов
     private final SessionFactory sessionFactory;
-    private final MatchesDao matchesDao = new MatchesDao();
+    private final MatchDao matchDao = new MatchDao();
 
-    public MatchesService(SessionFactory sessionFactory) {
+    public MatchService(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 
-    public List<MatchEntity> getPageOfMatches(int startIndex) {
+    public List<MatchEntity> getPage(int startIndex) {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
 
         try {
-            List<MatchEntity> matches = matchesDao.getPageOfMatches(session, startIndex);
+            List<MatchEntity> matches = matchDao.getPage(session, startIndex);
             session.getTransaction().commit();
             session.close();
             return matches;
@@ -28,12 +28,12 @@ public class MatchesService {                                                 //
         }
     }
 
-    public long getTotalMatches() {
+    public long count() {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
 
         try {
-            long total = matchesDao.getTotalMatches(session);
+            long total = matchDao.count(session);
             session.getTransaction().commit();
             session.close();
             return total;
@@ -43,12 +43,12 @@ public class MatchesService {                                                 //
         }
     }
 
-    public List<MatchEntity> getPageOfMatchesWithPlayerNameFilter(PlayerEntity player, int startIndex) {
+    public List<MatchEntity> getPageWithPlayerFilter(PlayerEntity player, int startIndex) {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
 
         try {
-            List<MatchEntity> matches = matchesDao.getPageOfMatchesWithPlayerNameFilter(session, player, startIndex);
+            List<MatchEntity> matches = matchDao.getPageWithPlayerFilter(session, player, startIndex);
             session.getTransaction().commit();
             session.close();
             return matches;
@@ -58,27 +58,12 @@ public class MatchesService {                                                 //
         }
     }
 
-    public PlayerEntity getPlayerByName(String playerName) {
+    public long countWithPlayerFilter(PlayerEntity player) {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
 
         try {
-            PlayerEntity player = matchesDao.getPlayerByName(session, playerName);
-            session.getTransaction().commit();
-            session.close();
-            return player;
-        } catch (Exception e) {
-            session.getTransaction().rollback();
-            throw e;
-        }
-    }
-
-    public long getTotalMatchesWithPlayerNameFilter(PlayerEntity player) {
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
-
-        try {
-            long totalMatches = matchesDao.getTotalMatchesWithPlayerNameFilter(session, player);
+            long totalMatches = matchDao.countWithPlayerFilter(session, player);
             session.getTransaction().commit();
             session.close();
             return totalMatches;
