@@ -12,8 +12,6 @@ import java.util.List;
 
 @WebServlet("/matches")
 public class MatchesServlet extends HttpServlet {
-
-    private static final int DEFAULT_PAGE_INDEX = 1;
     private static final int MATCHES_PER_PAGE = 5;
 
     int currentPage;
@@ -24,15 +22,17 @@ public class MatchesServlet extends HttpServlet {
         SessionFactory sessionFactory = SessionFactoryManager.getInstance().getSessionFactory();
         MatchService matchService = new MatchService(sessionFactory);
         PlayerService playerService = new PlayerService(sessionFactory);
+        PageResolver pageResolver = new PageResolver();
 
-        String page = request.getParameter("page");                             //валидацию потом прикрутим
+        String page = request.getParameter("page");
         String playerNameFilter = request.getParameter("filter_by_player_name");
 
-        currentPage = resolvePage(page);
+
+        currentPage = pageResolver.resolvePage(page);
         int paginationStartIndex = (currentPage - 1) * MATCHES_PER_PAGE;
 
 
-        if (playerNameFilter == null) {          //то фильтровать не надо  (метод showPageWithoutPlayerNameFilter)  вообще валидатор тут потом сделаешь
+        if (playerNameFilter == null) {          //то фильтровать не надо  (PlayerNameValidator будет мб)
             List<MatchEntity> matches = matchService.getPage(paginationStartIndex);
             long totalMatches = matchService.count();          //сделаешь обработку ошибок если вернулся пустой список этот случай нужно предусмотреть а то NPE будет
 
@@ -66,53 +66,41 @@ public class MatchesServlet extends HttpServlet {
             populateMatchAttributes(request, matches);
             request.getRequestDispatcher("/WEB-INF/matches.jsp").forward(request, response);
         }
-    }
-
-    private int parsePage(String requestedPageParameter) {
-        try {
-            return Integer.parseInt(requestedPageParameter);
-        } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("Некорректный параметр страницы!", e);
         }
-    }
 
-    private int resolvePage(String page) {
-        if (page != null) {
-            return parsePage(page);
-        } else {
-            return DEFAULT_PAGE_INDEX;
+
+
+
+
+        private int countTotalPages ( long matches){
+            return (int) Math.ceil((double) matches / MATCHES_PER_PAGE);
         }
-    }
 
-    private int countTotalPages(long matches) {
-        return (int) Math.ceil((double) matches / MATCHES_PER_PAGE);
-    }
+        private void populateMatchAttributes (HttpServletRequest request, List < MatchEntity > matches){
+            for (int i = 0; i < matches.size(); i++) {
+                MatchEntity match = matches.get(i);
+                PlayerEntity firstPlayer = match.getPlayer1();
+                PlayerEntity secondPlayer = match.getPlayer2();
+                PlayerEntity winner = match.getWinner();
 
-    private void populateMatchAttributes(HttpServletRequest request, List<MatchEntity> matches) {
-        for (int i = 0; i < matches.size(); i++) {
-            MatchEntity match = matches.get(i);
-            PlayerEntity firstPlayer = match.getPlayer1();
-            PlayerEntity secondPlayer = match.getPlayer2();
-            PlayerEntity winner = match.getWinner();
+                String firstPlayerFormName = "firstPlayerName" + (i + 1);
+                String secondPlayerFormName = "secondPlayerName" + (i + 1);
+                String winnerFormName = "winnerName" + (i + 1);
 
-            String firstPlayerFormName = "firstPlayerName" + (i + 1);
-            String secondPlayerFormName = "secondPlayerName" + (i + 1);
-            String winnerFormName = "winnerName" + (i + 1);
+                request.setAttribute(firstPlayerFormName, firstPlayer.getName());
+                request.setAttribute(secondPlayerFormName, secondPlayer.getName());
+                request.setAttribute(winnerFormName, winner.getName());
 
-            request.setAttribute(firstPlayerFormName, firstPlayer.getName());
-            request.setAttribute(secondPlayerFormName, secondPlayer.getName());
-            request.setAttribute(winnerFormName, winner.getName());
+                request.setAttribute("currentPage", currentPage);
+                request.setAttribute("totalPages", totalPages);
+            }
+        }
 
+        private void populateEmptyMatchAttributes (HttpServletRequest request){
             request.setAttribute("currentPage", currentPage);
             request.setAttribute("totalPages", totalPages);
         }
     }
-
-    private void populateEmptyMatchAttributes(HttpServletRequest request) {
-        request.setAttribute("currentPage", currentPage);
-        request.setAttribute("totalPages", totalPages);
-    }
-}
 
 
 
