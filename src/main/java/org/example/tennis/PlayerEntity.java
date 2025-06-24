@@ -1,12 +1,18 @@
 package org.example.tennis;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name="players")
+@Table(name = "players")
+@Getter
+@Setter
+@NoArgsConstructor
 public class PlayerEntity {
     @Id
     @GeneratedValue
@@ -24,51 +30,5 @@ public class PlayerEntity {
 
     public PlayerEntity(String name) {
         this.name = name;
-    }
-
-    public PlayerEntity() {
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setPlayer1(MatchEntity match) {
-        matchesAsPlayer1.add(match);
-        match.setPlayer1(this);
-    }
-
-    public void setPlayer2(MatchEntity match) {
-        matchesAsPlayer2.add(match);
-        match.setPlayer2(this);
-    }
-
-    public void setWinner(MatchEntity match) {
-        matchesWon.add(match);
-        match.setWinner(this);
-    }
-
-    public List<MatchEntity> getMatchesAsPlayer1() {
-        return matchesAsPlayer1;
-    }
-
-    public List<MatchEntity> getMatchesAsPlayer2() {
-        return matchesAsPlayer2;
-    }
-
-    public List<MatchEntity> getMatchesWon() {
-        return matchesWon;
     }
 }
