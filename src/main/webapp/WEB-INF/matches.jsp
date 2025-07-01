@@ -1,3 +1,6 @@
+<%@ page import="org.example.tennis.MatchEntity" %>
+<%@ page import="org.example.tennis.PlayerEntity" %>
+<%@ page import="java.util.List" %>
 <%
     int currentPage = (Integer) request.getAttribute("currentPage");
     int totalPages = (Integer) request.getAttribute("totalPages");
@@ -56,29 +59,29 @@
                 <th>Winner</th>
             </tr>
             <tr>
-                <td>${firstPlayerName1}</td>
-                <td>${secondPlayerName1}</td>
-                <td><span class="winner-name-td">${winnerName1}</span></td>
+                <td>${matches.firstPlayerName1}</td>
+                <td>${matches.secondPlayerName1}</td>
+                <td><span class="winner-name-td">${matches.winnerName1}</span></td>
             </tr>
             <tr>
-                <td>${firstPlayerName2}</td>
-                <td>${secondPlayerName2}</td>
-                <td><span class="winner-name-td">${winnerName2}</span></td>
+                <td>${matches.firstPlayerName2}</td>
+                <td>${matches.secondPlayerName2}</td>
+                <td><span class="winner-name-td">${matches.winnerName2}</span></td>
             </tr>
             <tr>
-                <td>${firstPlayerName3}</td>
-                <td>${secondPlayerName3}</td>
-                <td><span class="winner-name-td">${winnerName3}</span></td>
+                <td>${matches.firstPlayerName3}</td>
+                <td>${matches.secondPlayerName3}</td>
+                <td><span class="winner-name-td">${matches.winnerName3}</span></td>
             </tr>
             <tr>
-                <td>${firstPlayerName4}</td>
-                <td>${secondPlayerName4}</td>
-                <td><span class="winner-name-td">${winnerName4}</span></td>
+                <td>${matches.firstPlayerName4}</td>
+                <td>${matches.secondPlayerName4}</td>
+                <td><span class="winner-name-td">${matches.winnerName4}</span></td>
             </tr>
             <tr>
-                <td>${firstPlayerName5}</td>
-                <td>${secondPlayerName5}</td>
-                <td><span class="winner-name-td">${winnerName5}</span></td>
+                <td>${matches.firstPlayerName5}</td>
+                <td>${matches.secondPlayerName5}</td>
+                <td><span class="winner-name-td">${matches.winnerName5}</span></td>
             </tr>
         </table>
 
