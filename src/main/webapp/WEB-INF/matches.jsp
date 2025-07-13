@@ -1,9 +1,12 @@
 <%@ page import="org.example.tennis.MatchEntity" %>
 <%@ page import="org.example.tennis.PlayerEntity" %>
 <%@ page import="java.util.List" %>
+<%@ page import="java.util.Map" %>
+<%@ page import="org.example.tennis.MatchPageDto" %>
 <%
-    int currentPage = (Integer) request.getAttribute("currentPage");
-    int totalPages = (Integer) request.getAttribute("totalPages");
+    MatchPageDto matchPage = (MatchPageDto) request.getAttribute("matchPage");
+    int currentPage = matchPage.getCurrentPage();
+    int totalPages = matchPage.getTotalPages();
 %>
 <html>
 <head>
@@ -59,29 +62,29 @@
                 <th>Winner</th>
             </tr>
             <tr>
-                <td>${matches.firstPlayerName1}</td>
-                <td>${matches.secondPlayerName1}</td>
-                <td><span class="winner-name-td">${matches.winnerName1}</span></td>
+                <td>${matchPage.matchAttributes["firstPlayerName1"]}</td>
+                <td>${matchPage.matchAttributes["secondPlayerName1"]}</td>
+                <td><span class="winner-name-td">${matchPage.matchAttributes["winnerName1"]}</span></td>
             </tr>
             <tr>
-                <td>${matches.firstPlayerName2}</td>
-                <td>${matches.secondPlayerName2}</td>
-                <td><span class="winner-name-td">${matches.winnerName2}</span></td>
+                <td>${matchPage.matchAttributes["firstPlayerName2"]}</td>
+                <td>${matchPage.matchAttributes["secondPlayerName2"]}</td>
+                <td><span class="winner-name-td">${matchPage.matchAttributes["winnerName2"]}</span></td>
             </tr>
             <tr>
-                <td>${matches.firstPlayerName3}</td>
-                <td>${matches.secondPlayerName3}</td>
-                <td><span class="winner-name-td">${matches.winnerName3}</span></td>
+                <td>${matchPage.matchAttributes["firstPlayerName3"]}</td>
+                <td>${matchPage.matchAttributes["secondPlayerName3"]}</td>
+                <td><span class="winner-name-td">${matchPage.matchAttributes["winnerName3"]}</span></td>
             </tr>
             <tr>
-                <td>${matches.firstPlayerName4}</td>
-                <td>${matches.secondPlayerName4}</td>
-                <td><span class="winner-name-td">${matches.winnerName4}</span></td>
+                <td>${matchPage.matchAttributes["firstPlayerName4"]}</td>
+                <td>${matchPage.matchAttributes["secondPlayerName4"]}</td>
+                <td><span class="winner-name-td">${matchPage.matchAttributes["winnerName4"]}</span></td>
             </tr>
             <tr>
-                <td>${matches.firstPlayerName5}</td>
-                <td>${matches.secondPlayerName5}</td>
-                <td><span class="winner-name-td">${matches.winnerName5}</span></td>
+                <td>${matchPage.matchAttributes["firstPlayerName5"]}</td>
+                <td>${matchPage.matchAttributes["secondPlayerName5"]}</td>
+                <td><span class="winner-name-td">${matchPage.matchAttributes["winnerName5"]}</span></td>
             </tr>
         </table>
 
