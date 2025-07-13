@@ -9,12 +9,13 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 @WebListener
-public class AppLifecycleListener implements ServletContextListener {          //при запуске приложения открывает все че надо, при стопе приложения закрывает все че надо
-    private final H2ServerManager h2ServerManager = new H2ServerManager();
+public class AppLifecycleListener implements ServletContextListener {      //логгирование добавить на запуск и отключку
+    private H2ServerManager h2ServerManager;
     private SessionFactoryManager sessionFactoryManager;
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
+        h2ServerManager = new H2ServerManager();
         h2ServerManager.startServer();
         sessionFactoryManager = SessionFactoryManager.getInstance();
 
