@@ -47,21 +47,21 @@
                 </thead>
                 <tbody>
                 <tr class="player1">
-                    <td class="table-text">${match.firstPlayerId}</td>
-                    <td class="table-text">${match.firstPlayerSets}</td>
-                    <td class="table-text">${match.firstPlayerGames}</td>
-                    <td class="table-text">${match.firstPlayerPoints}</td>
-                    <td class="table-text">${firstPlayerResult}</td>
+                    <td class="table-text">${match.currentMatch.firstPlayerId}</td>
+                    <td class="table-text">${match.currentMatch.firstPlayerSets}</td>
+                    <td class="table-text">${match.currentMatch.firstPlayerGames}</td>
+                    <td class="table-text">${match.currentMatch.firstPlayerPoints}</td>
+                    <td class="table-text">${match.firstPlayerResult}</td>
                     <td class="table-text">
 
                     </td>
                 </tr>
                 <tr class="player2">
-                    <td class="table-text">${match.secondPlayerId}</td>
-                    <td class="table-text">${match.secondPlayerSets}</td>
-                    <td class="table-text">${match.secondPlayerGames}</td>
-                    <td class="table-text">${match.secondPlayerPoints}</td>
-                    <td class="table-text">${secondPlayerResult}</td>
+                    <td class="table-text">${match.currentMatch.secondPlayerId}</td>
+                    <td class="table-text">${match.currentMatch.secondPlayerSets}</td>
+                    <td class="table-text">${match.currentMatch.secondPlayerGames}</td>
+                    <td class="table-text">${match.currentMatch.secondPlayerPoints}</td>
+                    <td class="table-text">${match.secondPlayerResult}</td>
                     <td class="table-text">
 
                     </td>
