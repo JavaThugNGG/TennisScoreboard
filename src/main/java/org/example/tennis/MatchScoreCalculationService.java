@@ -1,157 +1,105 @@
 package org.example.tennis;
 
 public class MatchScoreCalculationService {
-    MatchStateValidator matchStateValidator = new MatchStateValidator();
+    private static final int DEFAULT_POINTS = 0;
+    private static final int POINTS_FIRST = 15;
+    private static final int POINTS_SECOND = 30;
+    private static final int POINTS_THIRD = 40;
 
-    public void scoringFirstPlayer(MatchScoreModel matchScoreModel) {   //для тестов передается matchScore и смотрим что например не обновился как и надо при 40:40
-        scoringFirstPlayerPoints(matchScoreModel);
-        matchStateValidator.validateMatchNotFinished(matchScoreModel);
+    private static final int DEFAULT_GAMES = 0;
+    private static final int GAMES_TO_WIN_SET = 6;
+
+    private static final int DEFAULT_ADVANTAGE = 0;
+    private static final int ADVANTAGE_WIN_DIFF = 2;
+
+    private static final int TIEBREAK_POINTS_TO_WIN = 7;
+
+    private final MatchStateValidator matchStateValidator = new MatchStateValidator();
+
+    public void scoring(MatchScoreModel match, PlayerSide scorerSide) {
+        PlayerScoreModel scorer = new PlayerScoreModel(match, scorerSide);
+        PlayerScoreModel opponent = new PlayerScoreModel(match, getOpponentSide(scorerSide));
+
+        if (match.isTiebreak()) {
+            handleTiebreak(match, scorer, opponent);
+            return;
+        }
+        updatePoints(scorer, opponent, match);
+        matchStateValidator.validateMatchNotFinished(match);
     }
 
-    public void scoringSecondPlayer(MatchScoreModel matchScoreModel) {
-        scoringSecondPlayerPoints(matchScoreModel);
-        matchStateValidator.validateMatchNotFinished(matchScoreModel);
-    }
-
-    private void scoringFirstPlayerPoints(MatchScoreModel matchScoreModel) {
-
-        int currentPoints = matchScoreModel.getFirstPlayerPoints();
-
-        if (currentPoints == 0) {
-            int newPoints = 15;
-            matchScoreModel.setFirstPlayerPoints(newPoints);
-        }
-
-        if (currentPoints == 15) {
-            int newPoints = 30;
-            matchScoreModel.setFirstPlayerPoints(newPoints);
-        }
-
-        if (currentPoints == 30) {
-            int newPoints = 40;
-            matchScoreModel.setFirstPlayerPoints(newPoints);
-        }
-
-        if (currentPoints == 40) {
-            int secondPlayerPoints = matchScoreModel.getSecondPlayerPoints();
-
-            if (secondPlayerPoints < 40) {
-                updateFirstPlayerGames(matchScoreModel);
-            }
-
-            if (secondPlayerPoints == 40) {
-                if (matchScoreModel.getFirstPlayerAdvantage() - matchScoreModel.getSecondPlayerAdvantage() == 2) {
-                    updateFirstPlayerGames(matchScoreModel);
-                } else {
-                    int firstPlayerCurrentAdvantage = matchScoreModel.getFirstPlayerAdvantage();
-                    int newFirstPlayerAdvantage = firstPlayerCurrentAdvantage + 1;
-                    matchScoreModel.setFirstPlayerAdvantage(newFirstPlayerAdvantage);
-                }
-            }
+    private void updatePoints(PlayerScoreModel scorer, PlayerScoreModel opponent, MatchScoreModel match) {
+        switch (scorer.getPoints()) {
+            case DEFAULT_POINTS -> scorer.setPoints(POINTS_FIRST);
+            case POINTS_FIRST   -> scorer.setPoints(POINTS_SECOND);
+            case POINTS_SECOND  -> scorer.setPoints(POINTS_THIRD);
+            case POINTS_THIRD   -> handleFortyPoints(scorer, opponent, match);
         }
     }
 
-    private void scoringSecondPlayerPoints(MatchScoreModel matchScoreModel) {
-
-        int currentPoints = matchScoreModel.getSecondPlayerPoints();
-
-        if (currentPoints == 0) {
-            int newPoints = 15;
-            matchScoreModel.setSecondPlayerPoints(newPoints);
-        }
-
-        if (currentPoints == 15) {
-            int newPoints = 30;
-            matchScoreModel.setSecondPlayerPoints(newPoints);
-        }
-
-        if (currentPoints == 30) {
-            int newPoints = 40;
-            matchScoreModel.setSecondPlayerPoints(newPoints);
-        }
-
-        if (currentPoints == 40) {
-            int firstPlayerPoints = matchScoreModel.getFirstPlayerPoints();
-
-            if (firstPlayerPoints < 40) {
-                updateSecondPlayerGames(matchScoreModel);
-            }
-
-            if (firstPlayerPoints == 40) {
-                if (matchScoreModel.getSecondPlayerAdvantage() - matchScoreModel.getFirstPlayerAdvantage() == 2) {
-                    updateSecondPlayerGames(matchScoreModel);
-                } else {
-                    int secondPlayerCurrentAdvantage = matchScoreModel.getSecondPlayerAdvantage();
-                    int newSecondPlayerAdvantage = secondPlayerCurrentAdvantage + 1;
-                    matchScoreModel.setSecondPlayerAdvantage(newSecondPlayerAdvantage);
-                }
+    private void handleFortyPoints(PlayerScoreModel scorer, PlayerScoreModel opponent, MatchScoreModel match) {
+        if (opponent.getPoints() < POINTS_THIRD) {
+            updateGames(scorer, opponent, match);
+        } else {
+            int advantageDiff = scorer.getAdvantage() - opponent.getAdvantage();
+            if (advantageDiff == ADVANTAGE_WIN_DIFF) {
+                updateGames(scorer, opponent, match);
+            } else {
+                scorer.setAdvantage(scorer.getAdvantage() + 1);
             }
         }
     }
 
+    private void updateGames(PlayerScoreModel scorer, PlayerScoreModel opponent, MatchScoreModel match) {
+        int scorerGames = scorer.getGames() + 1;
+        scorer.setGames(scorerGames);
+        int opponentGames = opponent.getGames();
 
-    private void updateFirstPlayerGames(MatchScoreModel matchScoreModel) {
-        if ((matchScoreModel.getFirstPlayerGames() == 6) && (matchScoreModel.getSecondPlayerGames() == 6)) {
-            updateFirstPlayerSets(matchScoreModel);
+        if (scorerGames == GAMES_TO_WIN_SET && opponentGames == GAMES_TO_WIN_SET) {
+            match.setTiebreak(true);
+            resetPointsAndAdvantage(match);
             return;
         }
 
-        if ((matchScoreModel.getFirstPlayerGames() == 5) && (matchScoreModel.getFirstPlayerGames() - matchScoreModel.getSecondPlayerGames() >= 1)) {
-            updateFirstPlayerSets(matchScoreModel);
-            return;
+        if (scorerGames >= GAMES_TO_WIN_SET && (scorerGames - opponentGames) >= ADVANTAGE_WIN_DIFF) {
+            updateSets(scorer, opponent, match);
+        } else {
+            resetPointsAndAdvantage(match);
         }
-
-
-        int firstPlayerGames = matchScoreModel.getFirstPlayerGames();
-        int newFirstPlayerGames = firstPlayerGames + 1;
-        matchScoreModel.setFirstPlayerGames(newFirstPlayerGames);
-        matchScoreModel.setFirstPlayerPoints(0);
-        matchScoreModel.setSecondPlayerPoints(0);
-        matchScoreModel.setFirstPlayerAdvantage(0);
-        matchScoreModel.setSecondPlayerAdvantage(0);
     }
 
-    private void updateSecondPlayerGames(MatchScoreModel matchScoreModel) {
-        if ((matchScoreModel.getSecondPlayerGames() == 6) && (matchScoreModel.getFirstPlayerGames() == 6)) {
-            updateSecondPlayerSets(matchScoreModel);
-            return;
+    private void handleTiebreak(MatchScoreModel match, PlayerScoreModel scorer, PlayerScoreModel opponent) {
+        int scorerPoints = scorer.getPoints() + 1;
+        scorer.setPoints(scorerPoints);
+
+        int opponentPoints = opponent.getPoints();
+        if (scorerPoints >= TIEBREAK_POINTS_TO_WIN && (scorerPoints - opponentPoints) >= ADVANTAGE_WIN_DIFF) {
+            updateSets(scorer, opponent, match);
+            match.setTiebreak(false);
         }
-
-        if ((matchScoreModel.getSecondPlayerGames() == 5) && (matchScoreModel.getSecondPlayerGames() - matchScoreModel.getFirstPlayerGames() >= 1)) {
-            updateSecondPlayerSets(matchScoreModel);
-            return;
-        }
-
-
-        int secondPlayerGames = matchScoreModel.getSecondPlayerGames();
-        int newSecondPlayerGames = secondPlayerGames + 1;
-        matchScoreModel.setSecondPlayerGames(newSecondPlayerGames);
-        matchScoreModel.setFirstPlayerPoints(0);
-        matchScoreModel.setSecondPlayerPoints(0);
-        matchScoreModel.setFirstPlayerAdvantage(0);
-        matchScoreModel.setSecondPlayerAdvantage(0);
     }
 
+    private void updateSets(PlayerScoreModel scorer, PlayerScoreModel opponent, MatchScoreModel match) {
+        scorer.setSets(scorer.getSets() + 1);
 
-    private void updateFirstPlayerSets(MatchScoreModel matchScoreModel) {
-        int firstPlayerCurrentSets = matchScoreModel.getFirstPlayerSets();
-        int newFirstPlayerSets = firstPlayerCurrentSets + 1;
-        matchScoreModel.setFirstPlayerSets(newFirstPlayerSets);
+        scorer.setGames(DEFAULT_GAMES);
+        opponent.setGames(DEFAULT_GAMES);
 
-        matchScoreModel.setFirstPlayerGames(0);
-        matchScoreModel.setSecondPlayerGames(0);
-        matchScoreModel.setFirstPlayerPoints(0);
-        matchScoreModel.setSecondPlayerPoints(0);
+        resetPointsAndAdvantage(match);
     }
 
-    private void updateSecondPlayerSets(MatchScoreModel matchScoreModel) {
-        int secondPlayerCurrentSets = matchScoreModel.getSecondPlayerSets();
-        int newSecondPlayerSets = secondPlayerCurrentSets + 1;
-        matchScoreModel.setSecondPlayerSets(newSecondPlayerSets);
+    private void resetPointsAndAdvantage(MatchScoreModel match) {
+        match.setFirstPlayerPoints(DEFAULT_POINTS);
+        match.setSecondPlayerPoints(DEFAULT_POINTS);
+        match.setFirstPlayerAdvantage(DEFAULT_ADVANTAGE);
+        match.setSecondPlayerAdvantage(DEFAULT_ADVANTAGE);
+    }
 
-        matchScoreModel.setFirstPlayerGames(0);
-        matchScoreModel.setSecondPlayerGames(0);
-        matchScoreModel.setFirstPlayerPoints(0);
-        matchScoreModel.setSecondPlayerPoints(0);
+    private PlayerSide getOpponentSide(PlayerSide scorerSide) {
+        if (scorerSide == PlayerSide.FIRST) {
+            return PlayerSide.SECOND;
+        } else {
+            return PlayerSide.FIRST;
+        }
     }
 }
