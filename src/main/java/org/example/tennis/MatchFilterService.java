@@ -9,18 +9,26 @@ public class MatchFilterService {
         this.playerService = playerService;
     }
 
-    public MatchPaginationDto get(String playerNameFilter, int paginationStartIndex) {
+    public MatchPaginationDto get(String playerNameFilter, int startIndex) {
         if (playerNameFilter == null) {
-            return new MatchPaginationDto(matchService.getPage(paginationStartIndex),
-                    (int) matchService.count()
-            );
+            return getWithoutFilter(startIndex);
         } else {
-            PlayerEntity player = playerService.getByName(playerNameFilter);
-            return new MatchPaginationDto(
-                    matchService.getPageWithPlayerFilter(player, paginationStartIndex),
-                    (int) matchService.countWithPlayerFilter(player)
-            );
+            return getWithFilter(playerNameFilter, startIndex);
         }
+    }
+
+    private MatchPaginationDto getWithoutFilter(int startIndex) {
+        return new MatchPaginationDto(matchService.getPage(startIndex),
+                (int) matchService.count()
+        );
+    }
+
+    private MatchPaginationDto getWithFilter(String playerNameFilter, int startIndex) {
+        PlayerEntity player = playerService.getByName(playerNameFilter);
+        return new MatchPaginationDto(
+                matchService.getPageWithPlayerFilter(player, startIndex),
+                (int) matchService.countWithPlayerFilter(player)
+        );
     }
 }
 
