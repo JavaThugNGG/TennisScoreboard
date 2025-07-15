@@ -8,9 +8,9 @@ public class FinishedMatchDto {
     private final String firstPlayerResult;
     private final String secondPlayerResult;
 
-    FinishedMatchDto(MatchScoreModel currentMatch, PlayersResultDto playersResultDto) {
+    FinishedMatchDto(MatchScoreModel currentMatch, PlayersResultDto playersResult) {
         this.currentMatch = currentMatch;
-        this.firstPlayerResult = String.valueOf(playersResultDto.getFirstPlayerResult());
-        this.secondPlayerResult = String.valueOf(playersResultDto.getSecondPlayerResult());
+        this.firstPlayerResult = String.valueOf(playersResult.getFirstPlayerResult());
+        this.secondPlayerResult = String.valueOf(playersResult.getSecondPlayerResult());
     }
 }
