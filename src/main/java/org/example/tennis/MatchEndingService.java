@@ -3,7 +3,8 @@ package org.example.tennis;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
-public class MatchPersistenceService {
+public class MatchEndingService {
+
     public PlayersResultDto persist(SessionFactory sessionFactory, int firstPlayerId, int secondPlayerId, PlayerSide winner) {
         Session session = sessionFactory.getCurrentSession();
         session.beginTransaction();
