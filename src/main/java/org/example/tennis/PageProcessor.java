@@ -1,11 +1,11 @@
 package org.example.tennis;
 
-public class PageResolver {
+public class PageProcessor {
     private static final int DEFAULT_PAGE_INDEX = 1;
-    PageValidator pageValidator = new PageValidator();
-    PageParser pageParser = new PageParser();
+    private final PageValidator pageValidator = new PageValidator();
+    private final PageParser pageParser = new PageParser();
 
-    public int resolvePage(String page) {
+    public int determinePage(String page) {
         if (isPageProvided(page)) {
             pageValidator.validate(page);
             return pageParser.parsePage(page);
