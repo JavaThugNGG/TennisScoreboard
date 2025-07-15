@@ -8,10 +8,10 @@ import lombok.Setter;
 import java.util.Map;
 
 @Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class MatchPageDto {
+@Setter
+public class MatchViewDto {
     private Map<String, String> matchAttributes;
     private int currentPage;
     private int totalPages;

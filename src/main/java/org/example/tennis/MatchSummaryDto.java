@@ -9,7 +9,7 @@ import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
-public class MatchPaginationDto {
+public class MatchSummaryDto {
     List<MatchEntity> matches;
     int totalCount;
 }
