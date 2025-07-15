@@ -11,18 +11,17 @@ import java.io.IOException;
 
 @WebServlet("/matches")
 public class MatchesServlet extends HttpServlet {
+    private final SessionFactory sessionFactory = SessionFactoryManager.getInstance().getSessionFactory();
+    private final PaginatedMatchViewService paginatedMatchViewService = new PaginatedMatchViewService(sessionFactory);
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        SessionFactory sessionFactory = SessionFactoryManager.getInstance().getSessionFactory();
-        MatchPageService matchPageService = new MatchPageService(sessionFactory);
-
         String page = request.getParameter("page");
-        String playerNameFilter = request.getParameter("filter_by_player_name");    //тут будет валидация
+        String playerNameFilter = request.getParameter("filter_by_player_name");
 
-        MatchPageDto matchpageDto = matchPageService.fetch(page, playerNameFilter);
+        MatchViewDto matchPage = paginatedMatchViewService.getPage(page, playerNameFilter);
 
-        request.setAttribute("matchPage", matchpageDto);
+        request.setAttribute("matchPage", matchPage);
         request.getRequestDispatcher("/WEB-INF/matches.jsp").forward(request, response);
     }
 }
