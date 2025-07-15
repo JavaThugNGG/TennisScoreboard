@@ -25,5 +25,34 @@ public class PlayerService {
             throw e;
         }
     }
+
+    public PlayerEntity insert(String playerName) {
+        Session session = sessionFactory.getCurrentSession();
+        session.beginTransaction();
+
+        try {
+            PlayerEntity player = new PlayerEntity(playerName);
+            session.persist(player);
+            session.getTransaction().commit();
+            return player;
+        } catch (Exception e) {
+            session.getTransaction().rollback();
+            if (isUniqueConstraintViolation(e)) {
+                throw new PlayerAlreadyExistsException();
+            }
+            throw e;
+        }
+    }
+
+    private boolean isUniqueConstraintViolation(Throwable e) {
+        Throwable cause = e;
+        while (cause != null) {
+            if (cause instanceof org.hibernate.exception.ConstraintViolationException) {
+                return true;
+            }
+            cause = cause.getCause();
+        }
+        return false;
+    }
 }
 
