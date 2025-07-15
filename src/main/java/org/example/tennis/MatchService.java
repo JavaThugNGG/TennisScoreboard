@@ -5,20 +5,21 @@ import org.hibernate.SessionFactory;
 
 import java.util.List;
 
-public class MatchService {                                                 // вынесение логики открытия закрытия Session и обертка для эксепшенов
+public class MatchService {
     private final SessionFactory sessionFactory;
-    private final MatchDao matchDao = new MatchDao();
+    private final MatchDao matchDao;
 
-    public MatchService(SessionFactory sessionFactory) {
+    public MatchService(SessionFactory sessionFactory, MatchDao matchDao) {
         this.sessionFactory = sessionFactory;
+        this.matchDao = matchDao;
     }
 
-    public List<MatchEntity> getPage(int startIndex) {
+    public List<MatchEntity> getPage(int matchesPerPage, int startIndex) {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
 
         try {
-            List<MatchEntity> matches = matchDao.getPage(session, startIndex);
+            List<MatchEntity> matches = matchDao.getPage(session, matchesPerPage, startIndex);
             session.getTransaction().commit();
             session.close();
             return matches;
@@ -43,12 +44,12 @@ public class MatchService {                                                 // �
         }
     }
 
-    public List<MatchEntity> getPageWithPlayerFilter(PlayerEntity player, int startIndex) {
+    public List<MatchEntity> getPageWithPlayerFilter(PlayerEntity player, int matchesPerPage, int startIndex) {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
 
         try {
-            List<MatchEntity> matches = matchDao.getPageWithPlayerFilter(session, player, startIndex);
+            List<MatchEntity> matches = matchDao.getPageWithPlayerFilter(session, player, matchesPerPage, startIndex);
             session.getTransaction().commit();
             session.close();
             return matches;

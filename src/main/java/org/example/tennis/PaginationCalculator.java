@@ -1,10 +1,10 @@
 package org.example.tennis;
 
-public class Pagination {
+public class PaginationCalculator {
     private final int matchesPerPage;
 
-    public Pagination() {
-        this.matchesPerPage = 5;
+    public PaginationCalculator(int matchesPerPage) {
+        this.matchesPerPage = matchesPerPage;
     }
 
     public int getStartIndex(int currentPage) {

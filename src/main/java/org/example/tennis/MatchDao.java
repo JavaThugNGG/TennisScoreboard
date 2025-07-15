@@ -6,13 +6,25 @@ import java.util.List;
 
 public class MatchDao {
 
-    public List<MatchEntity> getPage(Session session, int startIndex) {
+    public List<MatchEntity> getPage(Session session, int matchesPerPage, int paginationStartIndex) {
         return session.createQuery("""
                         FROM MatchEntity
                         ORDER BY id DESC
                         """, MatchEntity.class)
-                .setFirstResult(startIndex)
-                .setMaxResults(5)
+                .setFirstResult(paginationStartIndex)
+                .setMaxResults(matchesPerPage)
+                .getResultList();
+    }
+
+    public List<MatchEntity> getPageWithPlayerFilter(Session session, PlayerEntity player, int matchesPerPage, int paginationStartIndex) {
+        return session.createQuery("""
+                        FROM MatchEntity
+                        WHERE player1 = :player or player2 = :player
+                        ORDER BY id DESC
+                        """, MatchEntity.class)
+                .setParameter("player", player)
+                .setFirstResult(paginationStartIndex)
+                .setMaxResults(matchesPerPage)
                 .getResultList();
     }
 
@@ -21,18 +33,6 @@ public class MatchDao {
                 SELECT COUNT(m)
                 FROM MatchEntity m
                 """, Long.class).uniqueResult();
-    }
-
-    public List<MatchEntity> getPageWithPlayerFilter(Session session, PlayerEntity player, int startIndex) {
-        return session.createQuery("""
-                        FROM MatchEntity
-                        WHERE player1 = :player or player2 = :player
-                        ORDER BY id DESC
-                        """, MatchEntity.class)
-                .setParameter("player", player)
-                .setFirstResult(startIndex)
-                .setMaxResults(5)
-                .getResultList();
     }
 
     public long countWithPlayerFilter(Session session, PlayerEntity player) {
