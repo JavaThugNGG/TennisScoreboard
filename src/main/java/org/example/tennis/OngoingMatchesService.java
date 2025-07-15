@@ -1,15 +1,19 @@
 package org.example.tennis;
 
-
-import java.util.Collections;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class OngoingMatchesService {
+    private static final OngoingMatchesService INSTANCE = new OngoingMatchesService();
     private final Map<UUID, MatchScoreModel> currentMatches;
 
-    public OngoingMatchesService(Map<UUID, MatchScoreModel> currentMatches) {
-        this.currentMatches = currentMatches;
+    private OngoingMatchesService() {
+        currentMatches = new ConcurrentHashMap<>();
+    }
+
+    public static OngoingMatchesService getInstance() {
+        return INSTANCE;
     }
 
     public Map<UUID, MatchScoreModel> getCurrentMatches() {
@@ -22,12 +26,7 @@ public class OngoingMatchesService {
         return id;
     }
 
-    public MatchScoreModel findMatch(UUID id) {
-        return currentMatches.get(id);
-    }
-
     public void deleteMatch(UUID id) {
         currentMatches.remove(id);
     }
 }
-

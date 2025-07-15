@@ -4,12 +4,8 @@ import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;
 
-import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-
 @WebListener
-public class AppLifecycleListener implements ServletContextListener {      //логгирование добавить на запуск и отключку
+public class AppLifecycleListener implements ServletContextListener {
     private H2ServerManager h2ServerManager;
     private SessionFactoryManager sessionFactoryManager;
 
@@ -18,9 +14,6 @@ public class AppLifecycleListener implements ServletContextListener {      //л�
         h2ServerManager = new H2ServerManager();
         h2ServerManager.startServer();
         sessionFactoryManager = SessionFactoryManager.getInstance();
-
-        Map<UUID, MatchScoreModel> currentMatches = new ConcurrentHashMap<>();
-        sce.getServletContext().setAttribute("currentMatches", currentMatches);
     }
 
     @Override

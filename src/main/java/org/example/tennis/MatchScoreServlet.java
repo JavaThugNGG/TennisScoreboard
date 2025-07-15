@@ -15,9 +15,10 @@ import java.util.UUID;
 public class MatchScoreServlet extends HttpServlet {
     SessionFactory sessionFactory = SessionFactoryManager.getInstance().getSessionFactory();
 
-    OngoingMatchesService ongoingMatchesService;
+    OngoingMatchesService ongoingMatchesService = OngoingMatchesService.getInstance();
     MatchScoreCalculationService matchScoreCalculationService = new MatchScoreCalculationService();
-    MatchFinishingService matchFinishingService = new MatchFinishingService(matchScoreCalculationService);
+    MatchEndingService matchEndingService = new MatchEndingService();
+    MatchFinishingService matchFinishingService = new MatchFinishingService(matchEndingService);
 
     UuidValidator uuidValidator = new UuidValidator();
     PlayerValidator playerValidator = new PlayerValidator();
@@ -28,22 +29,13 @@ public class MatchScoreServlet extends HttpServlet {
     MatchProcessor matchProcessor = new MatchProcessor();
     PlayerProcessor playerProcessor = new PlayerProcessor();
 
-    private Map<UUID, MatchScoreModel> currentMatches;
-
-    @Override
-    public void init() throws ServletException {
-        super.init();
-        ongoingMatchesService = (OngoingMatchesService) getServletContext().getAttribute("ongoingMatchesService");
-        currentMatches = ongoingMatchesService.getCurrentMatches();
-    }
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String uuidParameter = request.getParameter("uuid");
 
         uuidValidator.validate(uuidParameter);
         UUID uuid = uuidParser.parse(uuidParameter);
-        MatchScoreModel currentMatch = matchProcessor.findMatch(currentMatches, uuid);
+        MatchScoreModel currentMatch = matchProcessor.findMatch(ongoingMatchesService.getCurrentMatches(), uuid);
 
         request.setAttribute("match", currentMatch);
         request.getRequestDispatcher("/WEB-INF/match-score.jsp").forward(request, response);
@@ -59,12 +51,12 @@ public class MatchScoreServlet extends HttpServlet {
         playerValidator.validateId(scoredIdParameter);
         int scoredId = playerParser.parseId(scoredIdParameter);
 
+        Map<UUID, MatchScoreModel> currentMatches = ongoingMatchesService.getCurrentMatches();
         MatchScoreModel currentMatch = matchProcessor.findMatch(currentMatches, matchUuid);
 
         int firstPlayerId = currentMatch.getFirstPlayerId();
         int secondPlayerId = currentMatch.getSecondPlayerId();
-
-        PlayerSide scorerSide = playerProcessor.resolveScorerSide(scoredId, firstPlayerId, secondPlayerId);
+        PlayerSide scorerSide = playerProcessor.determineScorerSide(scoredId, firstPlayerId, secondPlayerId);
 
         try {
             matchScoreCalculationService.scoring(currentMatch, scorerSide);
