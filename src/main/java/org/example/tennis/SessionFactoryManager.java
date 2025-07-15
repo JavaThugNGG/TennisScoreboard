@@ -1,12 +1,12 @@
 package org.example.tennis;
 
+import lombok.Getter;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
+@Getter
 public class SessionFactoryManager {
-
     private static final SessionFactoryManager INSTANCE = new SessionFactoryManager();
-
     private final SessionFactory sessionFactory;
 
     private SessionFactoryManager() {
@@ -25,10 +25,6 @@ public class SessionFactoryManager {
 
     public static SessionFactoryManager getInstance() {
         return INSTANCE;
-    }
-
-    public SessionFactory getSessionFactory() {
-        return sessionFactory;
     }
 
     public void close() {
