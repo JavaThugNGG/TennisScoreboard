@@ -1,6 +1,7 @@
 package org.example.tennis;
 
 public class PlayerParser {
+
     public int parseId(String playerId) {
         try {
             return Integer.parseInt(playerId);
