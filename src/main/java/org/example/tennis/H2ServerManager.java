@@ -10,7 +10,7 @@ public class H2ServerManager {
 
     private Server h2Server;
 
-    public void startServer() {                           //логгирование на стектрейсы
+    public void startServer() {
         if (h2Server != null && h2Server.isRunning(false)) {
             System.out.println("H2-сервер уже запущен.");
             return;
@@ -19,7 +19,7 @@ public class H2ServerManager {
         try {
             h2Server = Server.createWebServer(WEB_OPTION, WEB_ALLOW_OTHERS_OPTION, WEB_PORT_OPTION, WEB_PORT).start();
         } catch (Exception e) {
-            e.printStackTrace();                                       //в лог
+            e.printStackTrace();
         }
     }
 
