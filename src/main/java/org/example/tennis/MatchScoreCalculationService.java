@@ -14,7 +14,7 @@ public class MatchScoreCalculationService {
 
     private static final int TIEBREAK_POINTS_TO_WIN = 7;
 
-    private final MatchStateValidator matchStateValidator = new MatchStateValidator();
+    private final MatchStateService matchStateService = new MatchStateService();
 
     public void scoring(MatchScoreModel match, PlayerSide scorerSide) {
         PlayerScoreModel scorer = new PlayerScoreModel(match, scorerSide);
@@ -25,7 +25,7 @@ public class MatchScoreCalculationService {
             return;
         }
         updatePoints(scorer, opponent, match);
-        matchStateValidator.validateMatchNotFinished(match);
+        matchStateService.checkNotFinished(match);
     }
 
     private void updatePoints(PlayerScoreModel scorer, PlayerScoreModel opponent, MatchScoreModel match) {
