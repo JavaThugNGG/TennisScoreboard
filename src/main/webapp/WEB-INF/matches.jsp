@@ -49,9 +49,14 @@
                     type="text"
                     name="filter_by_player_name"
                     value="" />
-            <div>
-                <button type="submit" class="btn-filter">Filter</button>
-                <button type="button" class="btn-filter" onclick="window.location.href='${pageContext.request.contextPath}/matches'">Reset Filter</button>
+
+            <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 0px;">
+                <div>
+                    <button type="submit" class="btn-filter">Filter</button>
+                </div>
+                <div>
+                    <button type="button" class="btn-filter" onclick="window.location.href='${pageContext.request.contextPath}/matches'">Reset Filter</button>
+                </div>
             </div>
         </form>
 
