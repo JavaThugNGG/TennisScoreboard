@@ -5,10 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MatchViewMapper {
+public class MatchPageViewMapper {
 
-    public MatchViewDto toDto(List<MatchEntity> matches, int currentPage, int totalPages) {
-        MatchViewDto dto = new MatchViewDto();
+    public MatchPageViewDto toDto(List<MatchEntity> matches, int currentPage, int totalPages) {
+        MatchPageViewDto dto = new MatchPageViewDto();
         if (matches.isEmpty()) {
             dto.setMatchAttributes(Collections.emptyMap());
         } else {
