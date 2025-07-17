@@ -43,9 +43,9 @@ public class MatchFinishingService {
 
     private PlayersResultDto determinePlayersResult(PlayerSide winner) {
         if (winner == PlayerSide.FIRST) {
-            return new PlayersResultDto(PlayerResult.WINNER, PlayerResult.LOSER);
+            return new PlayersResultDto("WIN", "LOS");
         } else {
-            return new PlayersResultDto(PlayerResult.LOSER, PlayerResult.WINNER);
+            return new PlayersResultDto("WIN", "LOS");
         }
     }
 }

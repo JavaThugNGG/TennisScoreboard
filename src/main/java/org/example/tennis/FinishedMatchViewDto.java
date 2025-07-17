@@ -10,7 +10,7 @@ public class FinishedMatchViewDto {
 
     FinishedMatchViewDto(MatchScoreModel currentMatch, PlayersResultDto playersResult) {
         this.currentMatch = currentMatch;
-        this.firstPlayerResult = String.valueOf(playersResult.getFirstPlayerResult());
-        this.secondPlayerResult = String.valueOf(playersResult.getSecondPlayerResult());
+        this.firstPlayerResult = playersResult.getFirstPlayerResult();
+        this.secondPlayerResult = playersResult.getSecondPlayerResult();
     }
 }

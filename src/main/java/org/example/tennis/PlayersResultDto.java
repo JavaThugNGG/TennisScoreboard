@@ -6,6 +6,6 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class PlayersResultDto {
-    private final PlayerResult firstPlayerResult;
-    private final PlayerResult secondPlayerResult;
+    private final String firstPlayerResult;
+    private final String secondPlayerResult;
 }
