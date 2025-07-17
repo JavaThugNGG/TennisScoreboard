@@ -8,9 +8,7 @@ public class MatchScoreCalculationService {
 
     private static final int DEFAULT_GAMES = 0;
     private static final int GAMES_TO_WIN_SET = 6;
-
-    private static final int DEFAULT_ADVANTAGE = 0;
-    private static final int ADVANTAGE_WIN_DIFF = 2;
+    private static final int GAMES_WIN_DIFF = 2;
 
     private static final int TIEBREAK_POINTS_TO_WIN = 7;
 
@@ -42,12 +40,19 @@ public class MatchScoreCalculationService {
         if (opponent.getPoints() < POINTS_THIRD) {
             updateGames(scorer, opponent, match);
         } else {
-            int advantageDiff = scorer.getAdvantage() - opponent.getAdvantage();
-            if (advantageDiff == ADVANTAGE_WIN_DIFF) {
-                updateGames(scorer, opponent, match);
-            } else {
-                scorer.setAdvantage(scorer.getAdvantage() + 1);
-            }
+            handleDeuce(scorer, opponent, match);
+        }
+    }
+
+    private void handleDeuce(PlayerScoreModel scorer, PlayerScoreModel opponent, MatchScoreModel match) {
+        if (scorer.isAdvantage()) {
+            updateGames(scorer, opponent, match);
+            scorer.setAdvantage(false);
+            opponent.setAdvantage(false);
+        } else if (opponent.isAdvantage()) {
+            opponent.setAdvantage(false);
+        } else {
+            scorer.setAdvantage(true);
         }
     }
 
@@ -62,7 +67,7 @@ public class MatchScoreCalculationService {
             return;
         }
 
-        if (scorerGames >= GAMES_TO_WIN_SET && (scorerGames - opponentGames) >= ADVANTAGE_WIN_DIFF) {
+        if (scorerGames >= GAMES_TO_WIN_SET && (scorerGames - opponentGames) >= GAMES_WIN_DIFF) {
             updateSets(scorer, opponent, match);
         } else {
             resetPointsAndAdvantage(match);
@@ -74,7 +79,7 @@ public class MatchScoreCalculationService {
         scorer.setPoints(scorerPoints);
 
         int opponentPoints = opponent.getPoints();
-        if (scorerPoints >= TIEBREAK_POINTS_TO_WIN && (scorerPoints - opponentPoints) >= ADVANTAGE_WIN_DIFF) {
+        if (scorerPoints >= TIEBREAK_POINTS_TO_WIN && (scorerPoints - opponentPoints) >= GAMES_WIN_DIFF) {
             updateSets(scorer, opponent, match);
             match.setTiebreak(false);
         }
@@ -92,8 +97,8 @@ public class MatchScoreCalculationService {
     private void resetPointsAndAdvantage(MatchScoreModel match) {
         match.setFirstPlayerPoints(DEFAULT_POINTS);
         match.setSecondPlayerPoints(DEFAULT_POINTS);
-        match.setFirstPlayerAdvantage(DEFAULT_ADVANTAGE);
-        match.setSecondPlayerAdvantage(DEFAULT_ADVANTAGE);
+        match.setFirstPlayerAdvantage(false);
+        match.setSecondPlayerAdvantage(false);
     }
 
     private PlayerSide getOpponentSide(PlayerSide scorerSide) {

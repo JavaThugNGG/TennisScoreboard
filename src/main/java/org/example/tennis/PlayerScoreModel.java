@@ -57,15 +57,15 @@ public class PlayerScoreModel {
         }
     }
 
-    public int getAdvantage() {
+    public boolean isAdvantage() {
         if (player == PlayerSide.FIRST) {
-            return match.getFirstPlayerAdvantage();
+            return match.isFirstPlayerAdvantage();
         } else {
-            return match.getSecondPlayerAdvantage();
+            return match.isSecondPlayerAdvantage();
         }
     }
 
-    public void setAdvantage(int advantage) {
+    public void setAdvantage(boolean advantage) {
         if (player == PlayerSide.FIRST) {
             match.setFirstPlayerAdvantage(advantage);
         } else {

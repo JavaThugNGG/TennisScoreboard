@@ -18,8 +18,8 @@ public class MatchScoreModel {
     private int firstPlayerPoints;
     private int secondPlayerPoints;
 
-    private int firstPlayerAdvantage;
-    private int secondPlayerAdvantage;
+    private boolean firstPlayerAdvantage;
+    private boolean secondPlayerAdvantage;
 
     private boolean tiebreak;
 
