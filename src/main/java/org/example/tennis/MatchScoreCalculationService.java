@@ -17,8 +17,9 @@ public class MatchScoreCalculationService {
     private final MatchStateService matchStateService = new MatchStateService();
 
     public void scoring(MatchScoreModel match, PlayerSide scorerSide) {
+        PlayerSide opponentSide = getOpponentSide(scorerSide);
         PlayerScoreModel scorer = new PlayerScoreModel(match, scorerSide);
-        PlayerScoreModel opponent = new PlayerScoreModel(match, getOpponentSide(scorerSide));
+        PlayerScoreModel opponent = new PlayerScoreModel(match, opponentSide);
 
         if (match.isTiebreak()) {
             handleTiebreak(match, scorer, opponent);
