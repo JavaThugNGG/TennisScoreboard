@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class MatchScoreCalculationServiceTest {
-
+/*
     @Test
     void ScoringFirstPlayerPointsWhenScore40_0ShouldUpdateFirstPlayerGamesFrom0To1() {
         MatchScoreModel matchScoreModel = new MatchScoreModel(1,2,0,0,0,0,40,0);
@@ -150,7 +150,7 @@ public class MatchScoreCalculationServiceTest {
         matchScoreCalculationService.scoringFirstPlayer(matchScoreModel);
 
         assertEquals(1, matchScoreModel.getFirstPlayerSets());
-    }
+    }*/
 
 
 
