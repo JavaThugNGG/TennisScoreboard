@@ -2,7 +2,10 @@ package org.example.tennis;
 
 public class PlayerProcessor {
 
-    public PlayerSide determineScorerSide(int scorerId, int firstPlayerId, int secondPlayerId) {
+    public PlayerSide determineScorerSide(MatchScoreModel match, int scorerId) {
+        int firstPlayerId = match.getFirstPlayerId();
+        int secondPlayerId = match.getSecondPlayerId();
+
         if (scorerId == firstPlayerId) {
             return PlayerSide.FIRST;
         } else if (scorerId == secondPlayerId) {

@@ -11,8 +11,8 @@ public class FinishedMatchProcessingService {
         this.matchFinishingService = matchFinishingService;
     }
 
-    public FinishedMatchViewDto handleFinishedMatch(MatchScoreModel currentMatch, PlayerSide winnerSide, SessionFactory sessionFactory, int firstPlayerId, int secondPlayerId, OngoingMatchesService ongoingMatchesService, UUID matchIUuid) {
-        PlayersResultDto playersResult = matchFinishingService.persistMatch(sessionFactory, firstPlayerId, secondPlayerId, winnerSide);
+    public FinishedMatchViewDto handleFinishedMatch(MatchScoreModel currentMatch, PlayerSide winnerSide, SessionFactory sessionFactory, OngoingMatchesService ongoingMatchesService, UUID matchIUuid) {
+        PlayersResultDto playersResult = matchFinishingService.persistMatch(sessionFactory, currentMatch, winnerSide);
         ongoingMatchesService.removeMatch(matchIUuid);
         return new FinishedMatchViewDto(currentMatch, playersResult);
     }

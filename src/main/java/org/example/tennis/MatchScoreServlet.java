@@ -13,21 +13,21 @@ import java.util.UUID;
 
 @WebServlet("/match-score")
 public class MatchScoreServlet extends HttpServlet {
-    SessionFactory sessionFactory = SessionFactoryManager.getInstance().getSessionFactory();
+    private final SessionFactory sessionFactory = SessionFactoryManager.getInstance().getSessionFactory();
 
-    OngoingMatchesService ongoingMatchesService = OngoingMatchesService.getInstance();
-    MatchScoreCalculationService matchScoreCalculationService = new MatchScoreCalculationService();
-    MatchEndingService matchEndingService = new MatchEndingService();
-    MatchFinishingService matchFinishingService = new MatchFinishingService(matchEndingService);
+    private final OngoingMatchesService ongoingMatchesService = OngoingMatchesService.getInstance();
+    private final MatchScoreCalculationService matchScoreCalculationService = new MatchScoreCalculationService();
+    private final MatchFinishingService matchFinishingService = new MatchFinishingService();
+    private final FinishedMatchProcessingService finishedMatchProcessingService = new FinishedMatchProcessingService(matchFinishingService);
 
-    UuidValidator uuidValidator = new UuidValidator();
-    PlayerValidator playerValidator = new PlayerValidator();
+    private final UuidValidator uuidValidator = new UuidValidator();
+    private final PlayerValidator playerValidator = new PlayerValidator();
 
-    UuidParser uuidParser = new UuidParser();
-    PlayerParser playerParser = new PlayerParser();
+    private final UuidParser uuidParser = new UuidParser();
+    private final PlayerParser playerParser = new PlayerParser();
 
-    MatchProcessor matchProcessor = new MatchProcessor();
-    PlayerProcessor playerProcessor = new PlayerProcessor();
+    private final MatchProcessor matchProcessor = new MatchProcessor();
+    private final PlayerProcessor playerProcessor = new PlayerProcessor();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -54,16 +54,14 @@ public class MatchScoreServlet extends HttpServlet {
         Map<UUID, MatchScoreModel> currentMatches = ongoingMatchesService.getCurrentMatches();
         MatchScoreModel currentMatch = matchProcessor.findMatch(currentMatches, matchUuid);
 
-        int firstPlayerId = currentMatch.getFirstPlayerId();
-        int secondPlayerId = currentMatch.getSecondPlayerId();
-        PlayerSide scorerSide = playerProcessor.determineScorerSide(scoredId, firstPlayerId, secondPlayerId);
+        PlayerSide scorerSide = playerProcessor.determineScorerSide(currentMatch, scoredId);
 
         try {
             matchScoreCalculationService.scoring(currentMatch, scorerSide);
             request.setAttribute("match", currentMatch);
             response.sendRedirect(request.getContextPath() + "/match-score?uuid=" + matchUuid);
         } catch (MatchAlreadyFinishedException e) {
-            FinishedMatchDto finishedMatch = matchFinishingService.handleFinishedMatch(currentMatch, scorerSide, sessionFactory, firstPlayerId, secondPlayerId, ongoingMatchesService, matchUuid);
+            FinishedMatchViewDto finishedMatch = finishedMatchProcessingService.handleFinishedMatch(currentMatch, scorerSide, sessionFactory, ongoingMatchesService, matchUuid);
             request.setAttribute("match", finishedMatch);
             request.getRequestDispatcher("/WEB-INF/match-result.jsp").forward(request, response);
         }

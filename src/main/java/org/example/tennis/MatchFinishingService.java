@@ -5,7 +5,10 @@ import org.hibernate.SessionFactory;
 
 public class MatchFinishingService {
 
-    public PlayersResultDto persistMatch(SessionFactory sessionFactory, int firstPlayerId, int secondPlayerId, PlayerSide winner) {
+    public PlayersResultDto persistMatch(SessionFactory sessionFactory, MatchScoreModel match, PlayerSide winner) {
+        int firstPlayerId = match.getFirstPlayerId();
+        int secondPlayerId = match.getSecondPlayerId();
+
         Session session = sessionFactory.getCurrentSession();
         session.beginTransaction();
         try {
