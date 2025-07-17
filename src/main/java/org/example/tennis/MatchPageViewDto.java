@@ -11,7 +11,7 @@ import java.util.Map;
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
-public class MatchViewDto {
+public class MatchPageViewDto {
     private Map<String, String> matchAttributes;
     private int currentPage;
     private int totalPages;

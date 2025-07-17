@@ -2,9 +2,9 @@
 <%@ page import="org.example.tennis.PlayerEntity" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Map" %>
-<%@ page import="org.example.tennis.MatchViewDto" %>
+<%@ page import="org.example.tennis.MatchPageViewDto" %>
 <%
-    MatchViewDto matchPage = (MatchViewDto) request.getAttribute("matchPage");
+    MatchPageViewDto matchPage = (MatchPageViewDto) request.getAttribute("matchPage");
     int currentPage = matchPage.getCurrentPage();
     int totalPages = matchPage.getTotalPages();
 %>
