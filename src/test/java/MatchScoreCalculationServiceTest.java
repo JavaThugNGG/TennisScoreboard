@@ -1,16 +1,25 @@
 import org.example.tennis.*;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class MatchScoreCalculationServiceTest {
+    private final static int FIRST_PLAYER_ID = 1;
+    private final static int SECOND_PLAYER_ID = 2;
+
     private final MatchScoreCalculationService matchScoreCalculationService = new MatchScoreCalculationService();
+    private MatchScoreModel match;
+
+    @BeforeEach
+    void setUp() {
+        match = new MatchScoreModel(FIRST_PLAYER_ID, SECOND_PLAYER_ID);
+    }
 
     @ParameterizedTest
     @EnumSource(PlayerSide.class)
     void scoringPointsFrom0ShouldUpdatePointsFrom0To15(PlayerSide scorerSide) {
-        MatchScoreModel match = new MatchScoreModel(1, 2);
         PlayerScoreModel scorer = new PlayerScoreModel(match, scorerSide);
 
         matchScoreCalculationService.scoring(match, scorerSide);
@@ -21,7 +30,6 @@ public class MatchScoreCalculationServiceTest {
     @ParameterizedTest
     @EnumSource(PlayerSide.class)
     void scoringPointsFrom15ShouldUpdatePointsFrom15To30(PlayerSide scorerSide) {
-        MatchScoreModel match = new MatchScoreModel(1, 2);
         PlayerScoreModel scorer = new PlayerScoreModel(match, scorerSide);
 
         scorer.setPoints(15);
@@ -33,7 +41,6 @@ public class MatchScoreCalculationServiceTest {
     @ParameterizedTest
     @EnumSource(PlayerSide.class)
     void scoringPointsFrom30ShouldUpdatePointsFrom30To40(PlayerSide scorerSide) {
-        MatchScoreModel match = new MatchScoreModel(1, 2);
         PlayerScoreModel scorer = new PlayerScoreModel(match, scorerSide);
 
         scorer.setPoints(30);
@@ -45,7 +52,6 @@ public class MatchScoreCalculationServiceTest {
     @ParameterizedTest
     @EnumSource(PlayerSide.class)
     void scoringPointsFrom40ShouldIncreaseGames(PlayerSide scorerSide) {
-        MatchScoreModel match = new MatchScoreModel(1, 2);
         PlayerScoreModel scorer = new PlayerScoreModel(match, scorerSide);
 
         scorer.setPoints(40);
@@ -57,7 +63,6 @@ public class MatchScoreCalculationServiceTest {
     @ParameterizedTest
     @EnumSource(PlayerSide.class)
     void scoringAtDeuceShouldNotIncreaseGames(PlayerSide scorerSide) {
-        MatchScoreModel match = new MatchScoreModel(1, 2);
         PlayerScoreModel scorer = new PlayerScoreModel(match, scorerSide);
         PlayerSide opponentSide = getOpponentSide(scorerSide);
         PlayerScoreModel opponent = new PlayerScoreModel(match, opponentSide);
@@ -73,7 +78,6 @@ public class MatchScoreCalculationServiceTest {
     @ParameterizedTest
     @EnumSource(PlayerSide.class)
     void scoringAtDeuceWithNoAdvantageShouldNotIncreaseGames(PlayerSide scorerSide) {
-        MatchScoreModel match = new MatchScoreModel(1, 2);
         PlayerScoreModel scorer = new PlayerScoreModel(match, scorerSide);
         PlayerSide opponentSide = getOpponentSide(scorerSide);
         PlayerScoreModel opponent = new PlayerScoreModel(match, opponentSide);
@@ -90,7 +94,6 @@ public class MatchScoreCalculationServiceTest {
     @ParameterizedTest
     @EnumSource(PlayerSide.class)
     void scoringAtDeuceWithAdvantageShouldWinGame(PlayerSide scorerSide) {
-        MatchScoreModel match = new MatchScoreModel(1, 2);
         PlayerScoreModel scorer = new PlayerScoreModel(match, scorerSide);
         PlayerSide opponentSide = getOpponentSide(scorerSide);
         PlayerScoreModel opponent = new PlayerScoreModel(match, opponentSide);
@@ -107,7 +110,6 @@ public class MatchScoreCalculationServiceTest {
     @ParameterizedTest
     @EnumSource(PlayerSide.class)
     void scoringAtDeuceWithAdvantageShouldResetAdvantages(PlayerSide scorerSide) {
-        MatchScoreModel match = new MatchScoreModel(1, 2);
         PlayerScoreModel scorer = new PlayerScoreModel(match, scorerSide);
         PlayerSide opponentSide = getOpponentSide(scorerSide);
         PlayerScoreModel opponent = new PlayerScoreModel(match, opponentSide);
@@ -125,7 +127,6 @@ public class MatchScoreCalculationServiceTest {
     @ParameterizedTest
     @EnumSource(PlayerSide.class)
     void scoringGamesAt6_5ShouldStartTiebreak(PlayerSide scorerSide) {
-        MatchScoreModel match = new MatchScoreModel(1, 2);
         PlayerScoreModel scorer = new PlayerScoreModel(match, scorerSide);
         PlayerSide opponentSide = getOpponentSide(scorerSide);
         PlayerScoreModel opponent = new PlayerScoreModel(match, opponentSide);
@@ -143,7 +144,6 @@ public class MatchScoreCalculationServiceTest {
     @ParameterizedTest
     @EnumSource(PlayerSide.class)
     void scoringGamesAt5_5ShouldNotStartTiebreak(PlayerSide scorerSide) {
-        MatchScoreModel match = new MatchScoreModel(1, 2);
         PlayerScoreModel scorer = new PlayerScoreModel(match, scorerSide);
         PlayerSide opponentSide = getOpponentSide(scorerSide);
         PlayerScoreModel opponent = new PlayerScoreModel(match, opponentSide);
@@ -161,7 +161,6 @@ public class MatchScoreCalculationServiceTest {
     @ParameterizedTest
     @EnumSource(PlayerSide.class)
     void scoringGamesAt6_4ShouldIncreaseSets(PlayerSide scorerSide) {
-        MatchScoreModel match = new MatchScoreModel(1, 2);
         PlayerScoreModel scorer = new PlayerScoreModel(match, scorerSide);
         PlayerSide opponentSide = getOpponentSide(scorerSide);
         PlayerScoreModel opponent = new PlayerScoreModel(match, opponentSide);
