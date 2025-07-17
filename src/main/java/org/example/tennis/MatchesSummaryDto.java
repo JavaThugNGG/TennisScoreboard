@@ -9,7 +9,7 @@ import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
-public class MatchSummaryDto {
+public class MatchesSummaryDto {
     List<MatchEntity> matches;
     int totalCount;
 }
