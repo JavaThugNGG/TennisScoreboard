@@ -16,7 +16,8 @@ public class MatchPageViewService {
         MatchDao matchDao = new MatchDao();
         MatchService matchService = new MatchService(sessionFactory, matchDao);
         PlayerService playerService = new PlayerService(sessionFactory);
-        this.matchesSummaryService = new MatchesSummaryService(matchService, playerService, MATCHES_PER_PAGE);
+        PlayerNameFilterValidator playerNameFilterValidator = new PlayerNameFilterValidator();
+        this.matchesSummaryService = new MatchesSummaryService(matchService, playerService, MATCHES_PER_PAGE, playerNameFilterValidator);
     }
 
     public MatchPageViewDto getPage(String page, String playerNameFilter) {

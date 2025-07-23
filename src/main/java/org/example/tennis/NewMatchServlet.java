@@ -16,11 +16,11 @@ public class NewMatchServlet extends HttpServlet {
     private final PlayerService playerService = new PlayerService(sessionFactory);
     private final MatchInitializationService matchInitializationService = new MatchInitializationService(sessionFactory, playerService);
     private final OngoingMatchesService ongoingMatchesService = OngoingMatchesService.getInstance();
-    private final PlayerValidator playerValidator = new PlayerValidator();  //TODO: его заюзаешь (смотри вниз)
+    private final PlayerValidator playerValidator = new PlayerValidator();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.getRequestDispatcher("/new-match.html").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/new-match.jsp").forward(request, response);
     }
 
     @Override
@@ -28,10 +28,8 @@ public class NewMatchServlet extends HttpServlet {
         String firstPlayerName = request.getParameter("playerOne");
         String secondPlayerName = request.getParameter("playerTwo");
 
-        if (firstPlayerName == null || secondPlayerName == null || firstPlayerName.isBlank() || secondPlayerName.isBlank()) {  //TODO: валидатор прикрутишь (у него метода на валидирование имнени игрока нет)
-            System.out.println("Некорректное имя игрока/игроков.");
-            return;
-        }
+        playerValidator.validateName(firstPlayerName);
+        playerValidator.validateName(secondPlayerName);
 
         MatchScoreModel matchScoreModel = matchInitializationService.persistPlayers(firstPlayerName, secondPlayerName);
         UUID pastedMatchId = ongoingMatchesService.addMatch(matchScoreModel);
