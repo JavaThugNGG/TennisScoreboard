@@ -5,8 +5,13 @@
 <%@ page import="org.example.tennis.MatchPageViewDto" %>
 <%
     MatchPageViewDto matchPage = (MatchPageViewDto) request.getAttribute("matchPage");
-    int currentPage = matchPage.getCurrentPage();
-    int totalPages = matchPage.getTotalPages();
+    int currentPage = 1;
+    int totalPages = 1;
+
+    if (matchPage != null) {
+        currentPage = matchPage.getCurrentPage();
+        totalPages = matchPage.getTotalPages();
+    }
 %>
 <html>
 <head>
@@ -41,6 +46,10 @@
 <main>
     <div class="container">
         <h1>Matches</h1>
+
+        <c:if test="${not empty errorMessage}">
+            <p style="color: red;">${errorMessage}</p>
+        </c:if>
 
         <form method="get" action="#" class="input-container">
             <input

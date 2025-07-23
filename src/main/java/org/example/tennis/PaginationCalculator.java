@@ -12,6 +12,7 @@ public class PaginationCalculator {
     }
 
     public int getTotalPages(int totalItems) {
-        return (int) Math.ceil((double) totalItems / matchesPerPage);
+        int totalPages = (int) Math.ceil((double) totalItems / matchesPerPage);
+        return Math.max(1, totalPages);
     }
 }
