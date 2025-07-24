@@ -13,7 +13,8 @@ import java.util.UUID;
 @WebServlet("/new-match")
 public class NewMatchServlet extends HttpServlet {
     private final SessionFactory sessionFactory = SessionFactoryManager.getInstance().getSessionFactory();
-    private final PlayerService playerService = new PlayerService(sessionFactory);
+    private final PlayerDao playerDao = new PlayerDao();
+    private final PlayerService playerService = new PlayerService(sessionFactory, playerDao);
     private final MatchInitializationService matchInitializationService = new MatchInitializationService(playerService);
     private final OngoingMatchesService ongoingMatchesService = OngoingMatchesService.getInstance();
     private final PlayerValidator playerValidator = new PlayerValidator();

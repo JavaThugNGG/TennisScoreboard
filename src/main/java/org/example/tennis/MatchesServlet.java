@@ -13,8 +13,9 @@ import java.io.IOException;
 public class MatchesServlet extends HttpServlet {
     private final SessionFactory sessionFactory = SessionFactoryManager.getInstance().getSessionFactory();
     private final MatchDao matchDao = new MatchDao();
+    private final PlayerDao playerDao = new PlayerDao();
     private final PlayerValidator playerValidator = new PlayerValidator();
-    private final PlayerService playerService = new PlayerService(sessionFactory);
+    private final PlayerService playerService = new PlayerService(sessionFactory, playerDao);
     private final MatchService matchService = new MatchService(sessionFactory, matchDao);
     private final MatchesSummaryService matchesSummaryService = new MatchesSummaryService(matchService, playerService, playerValidator);
 
@@ -23,7 +24,6 @@ public class MatchesServlet extends HttpServlet {
     private final MatchPageViewService matchPageViewService = new MatchPageViewService(pageProcessor, matchesSummaryService, matchPageViewDtoBuilder, playerValidator);
 
     private final ErrorDtoBuilder errorDtoBuilder = new ErrorDtoBuilder();
-
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

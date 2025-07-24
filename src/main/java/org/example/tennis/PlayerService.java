@@ -5,10 +5,11 @@ import org.hibernate.SessionFactory;
 
 public class PlayerService {
     private final SessionFactory sessionFactory;
-    private final PlayerDao playerDao = new PlayerDao();
+    private final PlayerDao playerDao;
 
-    public PlayerService(SessionFactory sessionFactory) {
+    public PlayerService(SessionFactory sessionFactory, PlayerDao playerDao) {
         this.sessionFactory = sessionFactory;
+        this.playerDao = playerDao;
     }
 
     public PlayerEntity getByName(String playerName) {
