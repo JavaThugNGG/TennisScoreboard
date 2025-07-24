@@ -14,7 +14,7 @@ public class MatchScoreCalculationService {
 
     private final MatchStateService matchStateService;
 
-    MatchScoreCalculationService(MatchStateService matchStateService) {
+    public MatchScoreCalculationService(MatchStateService matchStateService) {
         this.matchStateService = matchStateService;
     }
 
