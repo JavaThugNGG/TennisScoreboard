@@ -11,7 +11,7 @@ public class PlayerProcessor {
         } else if (scorerId == secondPlayerId) {
             return PlayerSide.SECOND;
         } else {
-            throw new ElementNotFoundException("Игрок не найден. scorerId: " + scorerId);
+            throw new PlayerNotFoundException("Игрок не найден. scorerId: " + scorerId);//мб PlayerNotFoundException?
         }
     }
 }
