@@ -1,9 +1,9 @@
 package org.example.tennis;
 
-public class MatchInitializationService {
+public class MatchPreparingService {
     private final PlayerService playerService;
 
-    MatchInitializationService(PlayerService playerService) {
+    MatchPreparingService(PlayerService playerService) {
         this.playerService = playerService;
     }
 

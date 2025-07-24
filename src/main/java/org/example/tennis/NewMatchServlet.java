@@ -15,7 +15,7 @@ public class NewMatchServlet extends HttpServlet {
     private final SessionFactory sessionFactory = SessionFactoryManager.getInstance().getSessionFactory();
     private final PlayerDao playerDao = new PlayerDao();
     private final PlayerService playerService = new PlayerService(sessionFactory, playerDao);
-    private final MatchInitializationService matchInitializationService = new MatchInitializationService(playerService);
+    private final MatchPreparingService matchPreparingService = new MatchPreparingService(playerService);
     private final OngoingMatchesService ongoingMatchesService = OngoingMatchesService.getInstance();
     private final PlayerValidator playerValidator = new PlayerValidator();
     private final ErrorDtoBuilder errorDtoBuilder = new ErrorDtoBuilder();
@@ -42,7 +42,7 @@ public class NewMatchServlet extends HttpServlet {
         }
 
 
-        MatchScoreModel matchScoreModel = matchInitializationService.persistPlayers(firstPlayerName, secondPlayerName);
+        MatchScoreModel matchScoreModel = matchPreparingService.persistPlayers(firstPlayerName, secondPlayerName);
         UUID pastedMatchId = ongoingMatchesService.addMatch(matchScoreModel);
 
         String contextPath = request.getContextPath();
