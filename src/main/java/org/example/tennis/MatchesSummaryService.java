@@ -13,14 +13,6 @@ public class MatchesSummaryService {
         this.playerValidator = playerValidator;
     }
 
-    public MatchesSummaryDto get(String playerNameFilter, int paginationStartIndex) {
-        if (playerNameFilter == null) {
-            return getWithoutFilter(paginationStartIndex);
-        }
-        playerValidator.validateNameFilter(playerNameFilter);
-        return getWithFilter(playerNameFilter, paginationStartIndex);
-    }
-
     public MatchesSummaryDto getWithoutFilter(int paginationStartIndex) {
         return new MatchesSummaryDto(matchService.getPage(MATCHES_PER_PAGE, paginationStartIndex),
                 (int) matchService.count()
