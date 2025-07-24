@@ -1,11 +1,9 @@
 package org.example.tennis;
 
-import org.hibernate.SessionFactory;
-
 public class MatchInitializationService {
     private final PlayerService playerService;
 
-    MatchInitializationService(SessionFactory sessionFactory, PlayerService playerService) {
+    MatchInitializationService(PlayerService playerService) {
         this.playerService = playerService;
     }
 

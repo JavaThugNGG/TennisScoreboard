@@ -19,7 +19,6 @@ public class MatchesServlet extends HttpServlet {
     private final MatchesSummaryService matchesSummaryService = new MatchesSummaryService(matchService, playerService, playerValidator);
 
     private final MatchPageViewService matchPageViewService = new MatchPageViewService(matchesSummaryService);
-
     private final ErrorDtoBuilder errorDtoBuilder = new ErrorDtoBuilder();
 
     @Override
