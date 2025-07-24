@@ -5,9 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MatchPageViewMapper {
+public class MatchPageViewDtoBuilder {
 
-    public MatchPageViewDto toDto(List<MatchEntity> matches, int currentPage, int totalPages) {
+    public MatchPageViewDto build(List<MatchEntity> matches, int currentPage, int totalPages) {
         MatchPageViewDto dto = new MatchPageViewDto();
         if (matches.isEmpty()) {
             dto.setMatchAttributes(Collections.emptyMap());

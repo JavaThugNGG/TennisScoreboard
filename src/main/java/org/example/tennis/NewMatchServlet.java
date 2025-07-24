@@ -14,7 +14,7 @@ import java.util.UUID;
 public class NewMatchServlet extends HttpServlet {
     private final SessionFactory sessionFactory = SessionFactoryManager.getInstance().getSessionFactory();
     private final PlayerService playerService = new PlayerService(sessionFactory);
-    private final MatchInitializationService matchInitializationService = new MatchInitializationService(sessionFactory, playerService);
+    private final MatchInitializationService matchInitializationService = new MatchInitializationService(playerService);
     private final OngoingMatchesService ongoingMatchesService = OngoingMatchesService.getInstance();
     private final PlayerValidator playerValidator = new PlayerValidator();
     private final ErrorDtoBuilder errorDtoBuilder = new ErrorDtoBuilder();
@@ -33,7 +33,7 @@ public class NewMatchServlet extends HttpServlet {
             playerValidator.validateName(firstPlayerName);
             playerValidator.validateName(secondPlayerName);
         } catch (IllegalPlayerNameException e) {
-            ErrorDto error = errorDtoBuilder.build(request, e);
+            ErrorDto error = errorDtoBuilder.build(e);
             response.setStatus(error.getStatusCode());
             request.setAttribute("errorMessage", error.getMessage());
             request.getRequestDispatcher("/WEB-INF/new-match.jsp").forward(request, response);

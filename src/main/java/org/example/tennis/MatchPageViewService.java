@@ -6,7 +6,7 @@ public class MatchPageViewService {
     public final int MATCHES_PER_PAGE = 5;
 
     private final PageProcessor pageProcessor = new PageProcessor();   //никакой сервис не должен сам их создавать
-    private final MatchPageViewMapper matchPageViewMapper = new MatchPageViewMapper();
+    private final MatchPageViewDtoBuilder matchPageViewDtoBuilder = new MatchPageViewDtoBuilder();
     private final MatchPageViewCalculator matchPageViewCalculator = new MatchPageViewCalculator(MATCHES_PER_PAGE);
     private final MatchesSummaryService matchesSummaryService;
     private final PlayerValidator playerValidator = new PlayerValidator();
@@ -30,6 +30,6 @@ public class MatchPageViewService {
         List<MatchEntity> matches = matchesWithCount.getMatches();
         int count = matchesWithCount.getTotalCount();
         int totalPages = matchPageViewCalculator.getTotalPages(count);
-        return matchPageViewMapper.toDto(matches, currentPage, totalPages);
+        return matchPageViewDtoBuilder.build(matches, currentPage, totalPages);
     }
 }
