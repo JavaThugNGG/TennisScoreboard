@@ -1,9 +1,9 @@
 package org.example.tennis;
 
-public class PaginationCalculator {
+public class MatchPageViewCalculator {
     private final int matchesPerPage;
 
-    public PaginationCalculator(int matchesPerPage) {
+    public MatchPageViewCalculator(int matchesPerPage) {
         this.matchesPerPage = matchesPerPage;
     }
 

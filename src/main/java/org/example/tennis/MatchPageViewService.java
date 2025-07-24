@@ -1,33 +1,35 @@
 package org.example.tennis;
 
-import org.hibernate.SessionFactory;
-
 import java.util.List;
 
 public class MatchPageViewService {
-    private final int MATCHES_PER_PAGE = 5;
+    public final int MATCHES_PER_PAGE = 5;
 
-    private final PageProcessor pageProcessor = new PageProcessor();
+    private final PageProcessor pageProcessor = new PageProcessor();   //никакой сервис не должен сам их создавать
     private final MatchPageViewMapper matchPageViewMapper = new MatchPageViewMapper();
-    private final PaginationCalculator paginationCalculator = new PaginationCalculator(MATCHES_PER_PAGE);
+    private final MatchPageViewCalculator matchPageViewCalculator = new MatchPageViewCalculator(MATCHES_PER_PAGE);
     private final MatchesSummaryService matchesSummaryService;
+    private final PlayerValidator playerValidator = new PlayerValidator();
 
-    MatchPageViewService(SessionFactory sessionFactory) {
-        MatchDao matchDao = new MatchDao();
-        MatchService matchService = new MatchService(sessionFactory, matchDao);
-        PlayerService playerService = new PlayerService(sessionFactory);
-        PlayerNameFilterValidator playerNameFilterValidator = new PlayerNameFilterValidator();
-        this.matchesSummaryService = new MatchesSummaryService(matchService, playerService, MATCHES_PER_PAGE, playerNameFilterValidator);
+    MatchPageViewService(MatchesSummaryService matchesSummaryService) {
+        this.matchesSummaryService = matchesSummaryService;
     }
 
     public MatchPageViewDto getPage(String page, String playerNameFilter) {
         int currentPage = pageProcessor.determinePage(page);
-        int paginationStartIndex = paginationCalculator.getStartIndex(currentPage);
+        int paginationStartIndex = matchPageViewCalculator.getStartIndex(currentPage);
 
-        MatchesSummaryDto matchesWithCount = matchesSummaryService.get(playerNameFilter, paginationStartIndex);
+        MatchesSummaryDto matchesWithCount;
+        if (playerNameFilter == null) {
+            matchesWithCount = matchesSummaryService.getWithoutFilter(paginationStartIndex);
+        } else {
+            playerValidator.validateNameFilter(playerNameFilter);
+            matchesWithCount = matchesSummaryService.getWithFilter(playerNameFilter, paginationStartIndex);
+        }
+
         List<MatchEntity> matches = matchesWithCount.getMatches();
         int count = matchesWithCount.getTotalCount();
-        int totalPages = paginationCalculator.getTotalPages(count);
+        int totalPages = matchPageViewCalculator.getTotalPages(count);
         return matchPageViewMapper.toDto(matches, currentPage, totalPages);
     }
 }
