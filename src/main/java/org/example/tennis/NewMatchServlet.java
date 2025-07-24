@@ -17,6 +17,7 @@ public class NewMatchServlet extends HttpServlet {
     private final MatchInitializationService matchInitializationService = new MatchInitializationService(sessionFactory, playerService);
     private final OngoingMatchesService ongoingMatchesService = OngoingMatchesService.getInstance();
     private final PlayerValidator playerValidator = new PlayerValidator();
+    private final ErrorDtoBuilder errorDtoBuilder = new ErrorDtoBuilder();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -24,12 +25,21 @@ public class NewMatchServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         String firstPlayerName = request.getParameter("playerOne");
         String secondPlayerName = request.getParameter("playerTwo");
 
-        playerValidator.validateName(firstPlayerName);
-        playerValidator.validateName(secondPlayerName);
+        try {
+            playerValidator.validateName(firstPlayerName);
+            playerValidator.validateName(secondPlayerName);
+        } catch (IllegalPlayerNameException e) {
+            ErrorDto error = errorDtoBuilder.build(request, e);
+            response.setStatus(error.getStatusCode());
+            request.setAttribute("errorMessage", error.getMessage());
+            request.getRequestDispatcher("/WEB-INF/new-match.jsp").forward(request, response);
+            return;
+        }
+
 
         MatchScoreModel matchScoreModel = matchInitializationService.persistPlayers(firstPlayerName, secondPlayerName);
         UUID pastedMatchId = ongoingMatchesService.addMatch(matchScoreModel);

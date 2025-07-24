@@ -5,13 +5,13 @@ public class PlayerValidator {
 
     public void validateName(String name) {
         if (name == null || name.trim().isEmpty()) {
-            throw new IllegalArgumentException("Имя игрока не может быть пустым.");
+            throw new IllegalPlayerNameException("Имя игрока не может быть пустым.");
         }
         if (name.length() > MAX_PLAYER_NAME_LENGTH) {
-            throw new IllegalArgumentException("Имя игрока слишком длинное. Максимум " + MAX_PLAYER_NAME_LENGTH + " символов.");
+            throw new IllegalPlayerNameException("Имя игрока слишком длинное. Максимум " + MAX_PLAYER_NAME_LENGTH + " символов.");
         }
         if (!name.matches("[a-zA-Zа-яА-ЯёЁ\\- ]+")) {
-            throw new IllegalArgumentException("Имя игрока содержит недопустимые символы.");
+            throw new IllegalPlayerNameException("Имя игрока содержит недопустимые символы.");
         }
     }
 
