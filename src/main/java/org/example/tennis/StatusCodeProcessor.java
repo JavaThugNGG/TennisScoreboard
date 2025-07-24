@@ -2,9 +2,9 @@ package org.example.tennis;
 
 import jakarta.servlet.http.HttpServletResponse;
 
-public class StatusCodeMapper {
+public class StatusCodeProcessor {
 
-    public int getStatusCode(Throwable throwable) {
+    public int resolveStatusCode(Throwable throwable) {
         return switch (throwable.getClass().getSimpleName()) {
             case "IllegalArgumentException" -> HttpServletResponse.SC_BAD_REQUEST;
             case "ElementNotFoundException" -> HttpServletResponse.SC_NOT_FOUND;
