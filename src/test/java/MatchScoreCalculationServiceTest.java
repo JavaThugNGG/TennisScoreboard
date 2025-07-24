@@ -9,7 +9,8 @@ public class MatchScoreCalculationServiceTest {
     private final static int FIRST_PLAYER_ID = 1;
     private final static int SECOND_PLAYER_ID = 2;
 
-    private final MatchScoreCalculationService matchScoreCalculationService = new MatchScoreCalculationService();
+    private final MatchStateService matchStateService = new MatchStateService();
+    private final MatchScoreCalculationService matchScoreCalculationService = new MatchScoreCalculationService(matchStateService);
     private MatchScoreModel match;
 
     @BeforeEach
