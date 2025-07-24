@@ -1,8 +1,8 @@
 package org.example.tennis;
 
-public class UuidValidator {//допишется логика на длину символов и тд
+public class MatchValidator {
 
-    public void validate(String uuid) {
+    public void validateUuid(String uuid) {
         if (uuid == null || uuid.isBlank()) {
             throw new IllegalArgumentException("Некорректное значение UUID: " + uuid);
         }

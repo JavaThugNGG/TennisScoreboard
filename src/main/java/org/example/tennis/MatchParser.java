@@ -2,9 +2,9 @@ package org.example.tennis;
 
 import java.util.UUID;
 
-public class UuidParser {
+public class MatchParser {
 
-    public UUID parse(String uuidParameter) {
+    public UUID parseUuid(String uuidParameter) {
         try {
             return UUID.fromString(uuidParameter);
         } catch (IllegalArgumentException e) {

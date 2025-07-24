@@ -21,10 +21,10 @@ public class MatchScoreServlet extends HttpServlet {
     private final MatchFinishingService matchFinishingService = new MatchFinishingService();
     private final FinishedMatchProcessingService finishedMatchProcessingService = new FinishedMatchProcessingService(matchFinishingService);
 
-    private final UuidValidator uuidValidator = new UuidValidator();
+    private final MatchValidator matchValidator = new MatchValidator();
     private final PlayerValidator playerValidator = new PlayerValidator();
 
-    private final UuidParser uuidParser = new UuidParser();
+    private final MatchParser matchParser = new MatchParser();
     private final PlayerParser playerParser = new PlayerParser();
 
     private final MatchProcessor matchProcessor = new MatchProcessor();
@@ -34,8 +34,8 @@ public class MatchScoreServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String uuidParameter = request.getParameter("uuid");
 
-        uuidValidator.validate(uuidParameter);
-        UUID uuid = uuidParser.parse(uuidParameter);
+        matchValidator.validateUuid(uuidParameter);
+        UUID uuid = matchParser.parseUuid(uuidParameter);
         MatchScoreModel currentMatch = matchProcessor.findMatch(ongoingMatchesService.getCurrentMatches(), uuid);
 
         request.setAttribute("match", currentMatch);
@@ -47,8 +47,8 @@ public class MatchScoreServlet extends HttpServlet {
         String uuidParameter = request.getParameter("uuid");
         String scoredIdParameter = request.getParameter("scoredPlayerId");
 
-        uuidValidator.validate(uuidParameter);
-        UUID matchUuid = uuidParser.parse(uuidParameter);
+        matchValidator.validateUuid(uuidParameter);
+        UUID matchUuid = matchParser.parseUuid(uuidParameter);
         playerValidator.validateId(scoredIdParameter);
         int scoredId = playerParser.parseId(scoredIdParameter);
 
