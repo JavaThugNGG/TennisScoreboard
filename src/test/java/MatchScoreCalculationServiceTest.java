@@ -21,7 +21,7 @@ public class MatchScoreCalculationServiceTest {
     @ParameterizedTest
     @EnumSource(PlayerSide.class)
     void scoringPointsFrom0ShouldUpdatePointsFrom0To15(PlayerSide scorerSide) {
-        PlayerScoreModel scorer = new PlayerScoreModel(match, scorerSide);
+        MatchScoreModelWrapper scorer = new MatchScoreModelWrapper(match, scorerSide);
 
         matchScoreCalculationService.scoring(match, scorerSide);
 
@@ -31,7 +31,7 @@ public class MatchScoreCalculationServiceTest {
     @ParameterizedTest
     @EnumSource(PlayerSide.class)
     void scoringPointsFrom15ShouldUpdatePointsFrom15To30(PlayerSide scorerSide) {
-        PlayerScoreModel scorer = new PlayerScoreModel(match, scorerSide);
+        MatchScoreModelWrapper scorer = new MatchScoreModelWrapper(match, scorerSide);
 
         scorer.setPoints(15);
         matchScoreCalculationService.scoring(match, scorerSide);
@@ -42,7 +42,7 @@ public class MatchScoreCalculationServiceTest {
     @ParameterizedTest
     @EnumSource(PlayerSide.class)
     void scoringPointsFrom30ShouldUpdatePointsFrom30To40(PlayerSide scorerSide) {
-        PlayerScoreModel scorer = new PlayerScoreModel(match, scorerSide);
+        MatchScoreModelWrapper scorer = new MatchScoreModelWrapper(match, scorerSide);
 
         scorer.setPoints(30);
         matchScoreCalculationService.scoring(match, scorerSide);
@@ -53,7 +53,7 @@ public class MatchScoreCalculationServiceTest {
     @ParameterizedTest
     @EnumSource(PlayerSide.class)
     void scoringPointsFrom40ShouldIncreaseGames(PlayerSide scorerSide) {
-        PlayerScoreModel scorer = new PlayerScoreModel(match, scorerSide);
+        MatchScoreModelWrapper scorer = new MatchScoreModelWrapper(match, scorerSide);
 
         scorer.setPoints(40);
         matchScoreCalculationService.scoring(match, scorerSide);
@@ -64,9 +64,9 @@ public class MatchScoreCalculationServiceTest {
     @ParameterizedTest
     @EnumSource(PlayerSide.class)
     void scoringAtDeuceShouldNotIncreaseGames(PlayerSide scorerSide) {
-        PlayerScoreModel scorer = new PlayerScoreModel(match, scorerSide);
+        MatchScoreModelWrapper scorer = new MatchScoreModelWrapper(match, scorerSide);
         PlayerSide opponentSide = getOpponentSide(scorerSide);
-        PlayerScoreModel opponent = new PlayerScoreModel(match, opponentSide);
+        MatchScoreModelWrapper opponent = new MatchScoreModelWrapper(match, opponentSide);
 
         scorer.setPoints(40);
         opponent.setPoints(40);
@@ -79,9 +79,9 @@ public class MatchScoreCalculationServiceTest {
     @ParameterizedTest
     @EnumSource(PlayerSide.class)
     void scoringAtDeuceWithNoAdvantageShouldNotIncreaseGames(PlayerSide scorerSide) {
-        PlayerScoreModel scorer = new PlayerScoreModel(match, scorerSide);
+        MatchScoreModelWrapper scorer = new MatchScoreModelWrapper(match, scorerSide);
         PlayerSide opponentSide = getOpponentSide(scorerSide);
-        PlayerScoreModel opponent = new PlayerScoreModel(match, opponentSide);
+        MatchScoreModelWrapper opponent = new MatchScoreModelWrapper(match, opponentSide);
 
         scorer.setPoints(40);
         opponent.setPoints(40);
@@ -95,9 +95,9 @@ public class MatchScoreCalculationServiceTest {
     @ParameterizedTest
     @EnumSource(PlayerSide.class)
     void scoringAtDeuceWithAdvantageShouldWinGame(PlayerSide scorerSide) {
-        PlayerScoreModel scorer = new PlayerScoreModel(match, scorerSide);
+        MatchScoreModelWrapper scorer = new MatchScoreModelWrapper(match, scorerSide);
         PlayerSide opponentSide = getOpponentSide(scorerSide);
-        PlayerScoreModel opponent = new PlayerScoreModel(match, opponentSide);
+        MatchScoreModelWrapper opponent = new MatchScoreModelWrapper(match, opponentSide);
 
         scorer.setPoints(40);
         opponent.setPoints(40);
@@ -111,9 +111,9 @@ public class MatchScoreCalculationServiceTest {
     @ParameterizedTest
     @EnumSource(PlayerSide.class)
     void scoringAtDeuceWithAdvantageShouldResetAdvantages(PlayerSide scorerSide) {
-        PlayerScoreModel scorer = new PlayerScoreModel(match, scorerSide);
+        MatchScoreModelWrapper scorer = new MatchScoreModelWrapper(match, scorerSide);
         PlayerSide opponentSide = getOpponentSide(scorerSide);
-        PlayerScoreModel opponent = new PlayerScoreModel(match, opponentSide);
+        MatchScoreModelWrapper opponent = new MatchScoreModelWrapper(match, opponentSide);
 
         scorer.setPoints(40);
         opponent.setPoints(40);
@@ -128,9 +128,9 @@ public class MatchScoreCalculationServiceTest {
     @ParameterizedTest
     @EnumSource(PlayerSide.class)
     void scoringGamesAt6_5ShouldStartTiebreak(PlayerSide scorerSide) {
-        PlayerScoreModel scorer = new PlayerScoreModel(match, scorerSide);
+        MatchScoreModelWrapper scorer = new MatchScoreModelWrapper(match, scorerSide);
         PlayerSide opponentSide = getOpponentSide(scorerSide);
-        PlayerScoreModel opponent = new PlayerScoreModel(match, opponentSide);
+        MatchScoreModelWrapper opponent = new MatchScoreModelWrapper(match, opponentSide);
 
         scorer.setPoints(40);
         opponent.setPoints(0);
@@ -145,9 +145,9 @@ public class MatchScoreCalculationServiceTest {
     @ParameterizedTest
     @EnumSource(PlayerSide.class)
     void scoringGamesAt5_5ShouldNotStartTiebreak(PlayerSide scorerSide) {
-        PlayerScoreModel scorer = new PlayerScoreModel(match, scorerSide);
+        MatchScoreModelWrapper scorer = new MatchScoreModelWrapper(match, scorerSide);
         PlayerSide opponentSide = getOpponentSide(scorerSide);
-        PlayerScoreModel opponent = new PlayerScoreModel(match, opponentSide);
+        MatchScoreModelWrapper opponent = new MatchScoreModelWrapper(match, opponentSide);
 
         scorer.setPoints(40);
         opponent.setPoints(0);
@@ -162,9 +162,9 @@ public class MatchScoreCalculationServiceTest {
     @ParameterizedTest
     @EnumSource(PlayerSide.class)
     void scoringGamesAt6_4ShouldIncreaseSets(PlayerSide scorerSide) {
-        PlayerScoreModel scorer = new PlayerScoreModel(match, scorerSide);
+        MatchScoreModelWrapper scorer = new MatchScoreModelWrapper(match, scorerSide);
         PlayerSide opponentSide = getOpponentSide(scorerSide);
-        PlayerScoreModel opponent = new PlayerScoreModel(match, opponentSide);
+        MatchScoreModelWrapper opponent = new MatchScoreModelWrapper(match, opponentSide);
 
         scorer.setPoints(40);
         opponent.setPoints(0);

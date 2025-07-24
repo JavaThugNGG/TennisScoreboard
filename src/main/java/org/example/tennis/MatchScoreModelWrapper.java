@@ -1,10 +1,10 @@
 package org.example.tennis;
 
-public class PlayerScoreModel {
+public class MatchScoreModelWrapper {
     private final MatchScoreModel match;
     private final PlayerSide player;
 
-    public PlayerScoreModel(MatchScoreModel match, PlayerSide player) {
+    public MatchScoreModelWrapper(MatchScoreModel match, PlayerSide player) {
         this.match = match;
         this.player = player;
     }

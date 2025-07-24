@@ -20,8 +20,8 @@ public class MatchScoreCalculationService {
 
     public void scoring(MatchScoreModel match, PlayerSide scorerSide) {
         PlayerSide opponentSide = getOpponentSide(scorerSide);
-        PlayerScoreModel scorer = new PlayerScoreModel(match, scorerSide);
-        PlayerScoreModel opponent = new PlayerScoreModel(match, opponentSide);
+        MatchScoreModelWrapper scorer = new MatchScoreModelWrapper(match, scorerSide);
+        MatchScoreModelWrapper opponent = new MatchScoreModelWrapper(match, opponentSide);
 
         if (match.isTiebreak()) {
             handleTiebreak(match, scorer, opponent);
@@ -31,7 +31,7 @@ public class MatchScoreCalculationService {
         matchStateService.checkNotFinished(match);
     }
 
-    private void updatePoints(PlayerScoreModel scorer, PlayerScoreModel opponent, MatchScoreModel match) {
+    private void updatePoints(MatchScoreModelWrapper scorer, MatchScoreModelWrapper opponent, MatchScoreModel match) {
         switch (scorer.getPoints()) {
             case DEFAULT_POINTS -> scorer.setPoints(POINTS_FIRST);
             case POINTS_FIRST   -> scorer.setPoints(POINTS_SECOND);
@@ -40,7 +40,7 @@ public class MatchScoreCalculationService {
         }
     }
 
-    private void handleFortyPoints(PlayerScoreModel scorer, PlayerScoreModel opponent, MatchScoreModel match) {
+    private void handleFortyPoints(MatchScoreModelWrapper scorer, MatchScoreModelWrapper opponent, MatchScoreModel match) {
         if (opponent.getPoints() < POINTS_THIRD) {
             updateGames(scorer, opponent, match);
         } else {
@@ -48,7 +48,7 @@ public class MatchScoreCalculationService {
         }
     }
 
-    private void handleDeuce(PlayerScoreModel scorer, PlayerScoreModel opponent, MatchScoreModel match) {
+    private void handleDeuce(MatchScoreModelWrapper scorer, MatchScoreModelWrapper opponent, MatchScoreModel match) {
         if (scorer.isAdvantage()) {
             updateGames(scorer, opponent, match);
             scorer.setAdvantage(false);
@@ -60,7 +60,7 @@ public class MatchScoreCalculationService {
         }
     }
 
-    private void updateGames(PlayerScoreModel scorer, PlayerScoreModel opponent, MatchScoreModel match) {
+    private void updateGames(MatchScoreModelWrapper scorer, MatchScoreModelWrapper opponent, MatchScoreModel match) {
         int scorerGames = scorer.getGames() + 1;
         scorer.setGames(scorerGames);
         int opponentGames = opponent.getGames();
@@ -78,7 +78,7 @@ public class MatchScoreCalculationService {
         }
     }
 
-    private void handleTiebreak(MatchScoreModel match, PlayerScoreModel scorer, PlayerScoreModel opponent) {
+    private void handleTiebreak(MatchScoreModel match, MatchScoreModelWrapper scorer, MatchScoreModelWrapper opponent) {
         int scorerPoints = scorer.getPoints() + 1;
         scorer.setPoints(scorerPoints);
 
@@ -89,7 +89,7 @@ public class MatchScoreCalculationService {
         }
     }
 
-    private void updateSets(PlayerScoreModel scorer, PlayerScoreModel opponent, MatchScoreModel match) {
+    private void updateSets(MatchScoreModelWrapper scorer, MatchScoreModelWrapper opponent, MatchScoreModel match) {
         scorer.setSets(scorer.getSets() + 1);
 
         scorer.setGames(DEFAULT_GAMES);
