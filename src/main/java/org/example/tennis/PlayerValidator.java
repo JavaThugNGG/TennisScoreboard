@@ -20,4 +20,14 @@ public class PlayerValidator {
             throw new IllegalArgumentException("Некорректное значение id игрока: " + id);
         }
     }
+
+    public void validateNameFilter(String filter) {
+        if (filter.trim().isEmpty()) {
+            throw new IllegalPlayerNameFilterException("Некорректный фильтр - пустая строка");
+        }
+
+        if (!filter.matches("[a-zA-Zа-яА-ЯёЁ\\- ]+")) {
+            throw new IllegalPlayerNameFilterException("Фильтр содержит недопустимые символы");
+        }
+    }
 }
