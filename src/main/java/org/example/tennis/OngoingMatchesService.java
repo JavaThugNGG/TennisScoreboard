@@ -1,23 +1,24 @@
 package org.example.tennis;
 
+import lombok.Getter;
+
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.*;
 
 public class OngoingMatchesService {
     private static final OngoingMatchesService INSTANCE = new OngoingMatchesService();
+    @Getter
     private final Map<UUID, MatchScoreModel> currentMatches;
+    private ScheduledExecutorService scheduler;
 
     private OngoingMatchesService() {
         currentMatches = new ConcurrentHashMap<>();
+        scheduler = Executors.newSingleThreadScheduledExecutor();
     }
 
     public static OngoingMatchesService getInstance() {
         return INSTANCE;
-    }
-
-    public Map<UUID, MatchScoreModel> getCurrentMatches() {
-        return currentMatches;
     }
 
     public UUID addMatch(MatchScoreModel match) {
@@ -26,7 +27,20 @@ public class OngoingMatchesService {
         return id;
     }
 
-    public void removeMatch(UUID id) {
-        currentMatches.remove(id);
+    public void removeMatchWithDelay(UUID id, long delaySeconds) {
+        scheduler.schedule(() -> currentMatches.remove(id), delaySeconds, TimeUnit.SECONDS);
     }
+
+    public void startScheduler() {
+        if (scheduler == null || scheduler.isShutdown()) {
+            scheduler = Executors.newSingleThreadScheduledExecutor();
+        }
+    }
+
+    public void shutdownScheduler() {
+        if (scheduler != null && !scheduler.isShutdown()) {
+            scheduler.shutdown();
+        }
+    }
+
 }

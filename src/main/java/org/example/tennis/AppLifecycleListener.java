@@ -8,18 +8,22 @@ import jakarta.servlet.annotation.WebListener;
 public class AppLifecycleListener implements ServletContextListener {
     private H2ServerManager h2ServerManager;
     private SessionFactoryManager sessionFactoryManager;
+    private OngoingMatchesService ongoingMatchesService;
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         h2ServerManager = new H2ServerManager();
         h2ServerManager.startServer();
         sessionFactoryManager = SessionFactoryManager.getInstance();
+        ongoingMatchesService = OngoingMatchesService.getInstance();
+        ongoingMatchesService.startScheduler();
     }
 
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
         h2ServerManager.stopServer();
         sessionFactoryManager.close();
+        ongoingMatchesService.shutdownScheduler();
     }
 }
 

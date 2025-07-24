@@ -13,7 +13,7 @@ public class FinishedMatchProcessingService {
 
     public FinishedMatchViewDto handleFinishedMatch(MatchScoreModel currentMatch, PlayerSide winnerSide, SessionFactory sessionFactory, OngoingMatchesService ongoingMatchesService, UUID matchIUuid) {
         PlayersResultDto playersResult = matchFinishingService.persistMatch(sessionFactory, currentMatch, winnerSide);
-        ongoingMatchesService.removeMatch(matchIUuid);
+        ongoingMatchesService.removeMatchWithDelay(matchIUuid, 5);
         return new FinishedMatchViewDto(currentMatch, playersResult);
     }
 }
