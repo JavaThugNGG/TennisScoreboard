@@ -16,7 +16,8 @@ public class MatchScoreServlet extends HttpServlet {
     private final SessionFactory sessionFactory = SessionFactoryManager.getInstance().getSessionFactory();
 
     private final OngoingMatchesService ongoingMatchesService = OngoingMatchesService.getInstance();
-    private final MatchScoreCalculationService matchScoreCalculationService = new MatchScoreCalculationService();
+    private final MatchStateService matchStateService = new MatchStateService();
+    private final MatchScoreCalculationService matchScoreCalculationService = new MatchScoreCalculationService(matchStateService);
     private final MatchFinishingService matchFinishingService = new MatchFinishingService();
     private final FinishedMatchProcessingService finishedMatchProcessingService = new FinishedMatchProcessingService(matchFinishingService);
 

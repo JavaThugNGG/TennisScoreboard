@@ -12,7 +12,11 @@ public class MatchScoreCalculationService {
 
     private static final int TIEBREAK_POINTS_TO_WIN = 7;
 
-    private final MatchStateService matchStateService = new MatchStateService();
+    private final MatchStateService matchStateService;
+
+    MatchScoreCalculationService(MatchStateService matchStateService) {
+        this.matchStateService = matchStateService;
+    }
 
     public void scoring(MatchScoreModel match, PlayerSide scorerSide) {
         PlayerSide opponentSide = getOpponentSide(scorerSide);
