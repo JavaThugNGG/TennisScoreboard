@@ -7,8 +7,9 @@ public class PageProcessor {
 
     public int determinePage(String page) {
         if (isPageProvided(page)) {
-            pageValidator.validate(page);
-            return pageParser.parsePage(page);
+            int pageInt = pageParser.parsePage(page);
+            pageValidator.validatePage(pageInt);
+            return pageInt;
         }
         return DEFAULT_PAGE_INDEX;
     }
