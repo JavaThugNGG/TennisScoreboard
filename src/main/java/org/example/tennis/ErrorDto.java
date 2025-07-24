@@ -10,7 +10,6 @@ import lombok.Setter;
 public class ErrorDto {
     private final int statusCode;
     private final String message;
-    private final String forwardPath;
 }
 
 

@@ -8,9 +8,8 @@ public class ErrorDtoBuilder {
 
     public ErrorDto build(HttpServletRequest request, Throwable throwable) {
         String uri = request.getRequestURI();
-        String forwardPath = pathProcessor.resolveForwardPath(uri);
         int statusCode = statusCodeProcessor.resolveStatusCode(throwable);
         String message = "Ошибка: " + throwable.getMessage();
-        return new ErrorDto(statusCode, message, forwardPath);
+        return new ErrorDto(statusCode, message);
     }
 }
