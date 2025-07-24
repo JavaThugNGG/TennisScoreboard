@@ -13,13 +13,17 @@ import java.io.IOException;
 public class MatchesServlet extends HttpServlet {
     private final SessionFactory sessionFactory = SessionFactoryManager.getInstance().getSessionFactory();
     private final MatchDao matchDao = new MatchDao();
-    private final MatchService matchService = new MatchService(sessionFactory, matchDao);
-    private final PlayerService playerService = new PlayerService(sessionFactory);
     private final PlayerValidator playerValidator = new PlayerValidator();
+    private final PlayerService playerService = new PlayerService(sessionFactory);
+    private final MatchService matchService = new MatchService(sessionFactory, matchDao);
     private final MatchesSummaryService matchesSummaryService = new MatchesSummaryService(matchService, playerService, playerValidator);
 
-    private final MatchPageViewService matchPageViewService = new MatchPageViewService(matchesSummaryService);
+    private final PageProcessor pageProcessor = new PageProcessor();
+    private final MatchPageViewDtoBuilder matchPageViewDtoBuilder = new MatchPageViewDtoBuilder();
+    private final MatchPageViewService matchPageViewService = new MatchPageViewService(pageProcessor, matchesSummaryService, matchPageViewDtoBuilder, playerValidator);
+
     private final ErrorDtoBuilder errorDtoBuilder = new ErrorDtoBuilder();
+
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

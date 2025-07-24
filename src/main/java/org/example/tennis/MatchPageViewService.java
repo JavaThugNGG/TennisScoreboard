@@ -5,14 +5,17 @@ import java.util.List;
 public class MatchPageViewService {
     public final int MATCHES_PER_PAGE = 5;
 
-    private final PageProcessor pageProcessor = new PageProcessor();   //никакой сервис не должен сам их создавать
-    private final MatchPageViewDtoBuilder matchPageViewDtoBuilder = new MatchPageViewDtoBuilder();
-    private final MatchPageViewCalculator matchPageViewCalculator = new MatchPageViewCalculator(MATCHES_PER_PAGE);
+    private final PageProcessor pageProcessor;
+    private final MatchPageViewDtoBuilder matchPageViewDtoBuilder;
+    private final MatchPageViewCalculator matchPageViewCalculator = new MatchPageViewCalculator(MATCHES_PER_PAGE);;
     private final MatchesSummaryService matchesSummaryService;
-    private final PlayerValidator playerValidator = new PlayerValidator();
+    private final PlayerValidator playerValidator;
 
-    MatchPageViewService(MatchesSummaryService matchesSummaryService) {
+    MatchPageViewService(PageProcessor pageProcessor, MatchesSummaryService matchesSummaryService, MatchPageViewDtoBuilder matchPageViewDtoBuilder, PlayerValidator playerValidator) {
+        this.pageProcessor = pageProcessor;
         this.matchesSummaryService = matchesSummaryService;
+        this.matchPageViewDtoBuilder = matchPageViewDtoBuilder;
+        this.playerValidator = playerValidator;
     }
 
     public MatchPageViewDto getPage(String page, String playerNameFilter) {
