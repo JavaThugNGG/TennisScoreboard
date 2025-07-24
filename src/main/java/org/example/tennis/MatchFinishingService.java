@@ -45,7 +45,7 @@ public class MatchFinishingService {
         if (winner == PlayerSide.FIRST) {
             return new PlayersResultDto("WIN", "LOS");
         } else {
-            return new PlayersResultDto("WIN", "LOS");
+            return new PlayersResultDto("LOS", "WIN");
         }
     }
 }
