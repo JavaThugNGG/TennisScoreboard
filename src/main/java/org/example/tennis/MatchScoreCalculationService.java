@@ -19,6 +19,7 @@ public class MatchScoreCalculationService {
     }
 
     public void scoring(MatchScoreModel match, PlayerSide scorerSide) {
+        matchStateService.checkNotFinished(match);
         PlayerSide opponentSide = getOpponentSide(scorerSide);
         MatchScoreModelWrapper scorer = new MatchScoreModelWrapper(match, scorerSide);
         MatchScoreModelWrapper opponent = new MatchScoreModelWrapper(match, opponentSide);
@@ -28,7 +29,6 @@ public class MatchScoreCalculationService {
             return;
         }
         updatePoints(scorer, opponent, match);
-        matchStateService.checkNotFinished(match);
     }
 
     private void updatePoints(MatchScoreModelWrapper scorer, MatchScoreModelWrapper opponent, MatchScoreModel match) {

@@ -23,6 +23,10 @@ public class MatchScoreModel {
 
     private boolean tiebreak;
 
+    private boolean finished;
+
+    private final Object lock = new Object();
+
     public MatchScoreModel(int firstPlayerId, int secondPlayerId) {
         this.firstPlayerId = firstPlayerId;
         this.secondPlayerId = secondPlayerId;

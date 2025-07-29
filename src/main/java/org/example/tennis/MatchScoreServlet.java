@@ -72,20 +72,29 @@ public class MatchScoreServlet extends HttpServlet {
 
         Map<UUID, MatchScoreModel> currentMatches = ongoingMatchesService.getCurrentMatches();
         MatchScoreModel currentMatch = matchProcessor.findMatch(currentMatches, matchUuid);
-
         PlayerSide scorerSide = playerProcessor.determineScorerSide(currentMatch, scoredId);
 
         try {
             matchScoreCalculationService.scoring(currentMatch, scorerSide);
             logger.info("match is scoring: first player id {}, second player id {}, scoring by id: {}", currentMatch.getFirstPlayerId(), currentMatch.getSecondPlayerId(), scoredIdParameter);
-            request.setAttribute("match", currentMatch);
             response.sendRedirect(request.getContextPath() + "/match-score?uuid=" + matchUuid);
         } catch (MatchAlreadyFinishedException e) {
-            FinishedMatchViewDto finishedMatch = finishedMatchProcessingService.handleFinishedMatch(currentMatch, scorerSide, sessionFactory, ongoingMatchesService, matchUuid);
-            request.setAttribute("match", finishedMatch);
-            logger.info("match is finished: first player id {}, second player id {}", finishedMatch.getCurrentMatch().getFirstPlayerId(), finishedMatch.getCurrentMatch().getSecondPlayerId());
-            request.getRequestDispatcher("/WEB-INF/match-result.jsp").forward(request, response);
+            handleFinishedMatch(request, response, currentMatch, scorerSide, matchUuid);
         }
+    }
+
+    private void handleFinishedMatch(HttpServletRequest request, HttpServletResponse response, MatchScoreModel currentMatch, PlayerSide scorerSide, UUID matchUuid) throws ServletException, IOException {
+        synchronized (currentMatch.getLock()) {
+            if (!currentMatch.isFinished()) {
+                FinishedMatchViewDto finishedMatch = finishedMatchProcessingService.handleFinishedMatch(currentMatch, scorerSide, sessionFactory, ongoingMatchesService, matchUuid);
+                currentMatch.setFinished(true);
+                request.setAttribute("match", finishedMatch);
+                logger.info("match is finished: first player id {}, second player id {}", finishedMatch.getCurrentMatch().getFirstPlayerId(), finishedMatch.getCurrentMatch().getSecondPlayerId());
+                request.getRequestDispatcher("/WEB-INF/match-result.jsp").forward(request, response);
+                return;
+            }
+        }
+        response.sendRedirect(request.getContextPath() + "/match-score?uuid=" + matchUuid);
     }
 }
 
