@@ -47,7 +47,7 @@ public class PlayerService {
             if (isUniqueConstraintViolation(e)) {
                 throw new PlayerAlreadyExistsException();
             } else {
-                logger.error("error inserting player by name: {}", playerName, e);
+                logger.warn("error inserting player by name: {}", playerName, e);
             }
             throw e;
         } finally {

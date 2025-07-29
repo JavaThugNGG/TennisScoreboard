@@ -38,7 +38,7 @@ public class MatchesServlet extends HttpServlet {
         try {
             matchPage = matchPageViewService.getPage(page, playerNameFilter);
         } catch (IllegalPlayerNameFilterException e) {
-            logger.warn("incorrect playerNameFilter: {}", playerNameFilter);
+            logger.warn("incorrect or empty playerNameFilter: {}", playerNameFilter);
             matchPage = matchPageViewService.getPage(page, null);
             ErrorDto error = errorDtoBuilder.build(e);
             response.setStatus(error.getStatusCode());
