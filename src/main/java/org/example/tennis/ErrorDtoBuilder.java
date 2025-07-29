@@ -5,7 +5,8 @@ public class ErrorDtoBuilder {
 
     public ErrorDto build(Throwable throwable) {
         int statusCode = statusCodeProcessor.resolveStatusCode(throwable);
-        String message = "Ошибка: " + throwable.getMessage();
+        String message = "ошибка: " + throwable.getMessage();
         return new ErrorDto(statusCode, message);
     }
 }
+

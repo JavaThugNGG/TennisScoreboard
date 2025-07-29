@@ -1,9 +1,13 @@
 package org.example.tennis;
 
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class PlayerService {
+    private static final Logger logger = LoggerFactory.getLogger(PlayerService.class);
     private final SessionFactory sessionFactory;
     private final PlayerDao playerDao;
 
@@ -13,17 +17,19 @@ public class PlayerService {
     }
 
     public PlayerEntity getByName(String playerName) {
-        Session session = sessionFactory.openSession();
+        Session session = sessionFactory.getCurrentSession();
         session.beginTransaction();
 
         try {
             PlayerEntity player = playerDao.getByName(session, playerName);
             session.getTransaction().commit();
-            session.close();
             return player;
-        } catch (Exception e) {
+        } catch (HibernateException e) {
             session.getTransaction().rollback();
+            logger.error("error getting player by name: {}", playerName, e);
             throw e;
+        } finally {
+            session.close();
         }
     }
 
@@ -36,12 +42,16 @@ public class PlayerService {
             session.persist(player);
             session.getTransaction().commit();
             return player;
-        } catch (Exception e) {
+        } catch (HibernateException e) {
             session.getTransaction().rollback();
             if (isUniqueConstraintViolation(e)) {
                 throw new PlayerAlreadyExistsException();
+            } else {
+                logger.error("error inserting player by name: {}", playerName, e);
             }
             throw e;
+        } finally {
+            session.close();
         }
     }
 

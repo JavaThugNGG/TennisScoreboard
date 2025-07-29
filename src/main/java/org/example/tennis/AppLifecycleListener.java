@@ -15,27 +15,23 @@ public class AppLifecycleListener implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
-        logger.info("Starting app initialization");
-
+        logger.info("starting app initialization");
         h2ServerManager = new H2ServerManager();
         h2ServerManager.startServer();
         sessionFactoryManager = SessionFactoryManager.getInstance();
         ongoingMatchesService = OngoingMatchesService.getInstance();
         ongoingMatchesService.startScheduler();
-
-        logger.info("App has been initialized");
+        logger.info("app has been initialized");
     }
 
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
-        System.out.println("Starting app shutdown");
-
+        System.out.println("info: starting app shutdown");
         h2ServerManager.stopServer();
         sessionFactoryManager.close();
         ongoingMatchesService.shutdownScheduler();
         JdbcManager.deregisterJdbcDrivers();
-
-        System.out.println("App has been shutdown");
+        System.out.println("info: app has been shutdown");
     }
 }
 

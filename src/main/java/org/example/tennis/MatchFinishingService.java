@@ -2,8 +2,11 @@ package org.example.tennis;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MatchFinishingService {
+    private static final Logger logger = LoggerFactory.getLogger(MatchFinishingService.class);
 
     public PlayersResultDto persistMatch(SessionFactory sessionFactory, MatchScoreModel match, PlayerSide winner) {
         int firstPlayerId = match.getFirstPlayerId();
@@ -19,10 +22,12 @@ public class MatchFinishingService {
 
             session.persist(matchEntity);
             session.getTransaction().commit();
+            logger.info("match persisted successfully: matchId={}, winner={}", matchEntity.getId(), winner);
 
             return determinePlayersResult(winner);
         } catch (Exception e) {
             session.getTransaction().rollback();
+            logger.error("error persisting match between players {} and {}", firstPlayerId, secondPlayerId, e);
             throw e;
         }
     }

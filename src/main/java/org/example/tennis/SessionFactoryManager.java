@@ -3,9 +3,12 @@ package org.example.tennis;
 import lombok.Getter;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Getter
 public class SessionFactoryManager {
+    private static final Logger logger = LoggerFactory.getLogger(SessionFactoryManager.class);
     private static final SessionFactoryManager INSTANCE = new SessionFactoryManager();
     private final SessionFactory sessionFactory;
 
@@ -16,9 +19,10 @@ public class SessionFactoryManager {
     private SessionFactory buildSessionFactory() {
         try {
             SessionFactory factory = new Configuration().configure("hibernate.cfg.xml").buildSessionFactory();
-            System.out.println("SessionFactory создан.");
+            logger.info("sessionFactory created");
             return factory;
         } catch (Exception e) {
+            logger.error("failed to create sessionFactory", e);
             throw new RuntimeException("Ошибка при создании SessionFactory", e);
         }
     }

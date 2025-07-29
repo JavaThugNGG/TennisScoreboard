@@ -1,11 +1,15 @@
 package org.example.tennis;
 
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 public class MatchService {
+    private static final Logger logger = LoggerFactory.getLogger(MatchService.class);
     private final SessionFactory sessionFactory;
     private final MatchDao matchDao;
 
@@ -21,12 +25,15 @@ public class MatchService {
         try {
             List<MatchEntity> matches = matchDao.getPage(session, matchesPerPage, startIndex);
             session.getTransaction().commit();
-            session.close();
             return matches;
-        } catch (Exception e) {
+        } catch (HibernateException e) {
             session.getTransaction().rollback();
+            logger.error("error getting page of matches with start index: {}, matches per page: {}", startIndex, matchesPerPage, e);
             throw e;
+        } finally {
+            session.close();
         }
+
     }
 
     public long count() {
@@ -36,11 +43,13 @@ public class MatchService {
         try {
             long total = matchDao.count(session);
             session.getTransaction().commit();
-            session.close();
             return total;
-        } catch (Exception e) {
+        } catch (HibernateException e) {
             session.getTransaction().rollback();
+            logger.error("error getting count of matches", e);
             throw e;
+        } finally {
+            session.close();
         }
     }
 
@@ -51,11 +60,13 @@ public class MatchService {
         try {
             List<MatchEntity> matches = matchDao.getPageWithPlayerFilter(session, player, matchesPerPage, startIndex);
             session.getTransaction().commit();
-            session.close();
             return matches;
-        } catch (Exception e) {
+        } catch (HibernateException e) {
             session.getTransaction().rollback();
+            logger.error("error getting page of matches with player filter: {}, player id: {}, matches per page: {}, start index: {}", player.getName(), player.getId(), matchesPerPage, startIndex, e);
             throw e;
+        } finally {
+            session.close();
         }
     }
 
@@ -66,11 +77,13 @@ public class MatchService {
         try {
             long totalMatches = matchDao.countWithPlayerFilter(session, player);
             session.getTransaction().commit();
-            session.close();
             return totalMatches;
-        } catch (Exception e) {
+        } catch (HibernateException e) {
             session.getTransaction().rollback();
+            logger.error("error getting count matches with player filter: {}, player id: {}", player.getName(), player.getId(), e);
             throw e;
+        } finally {
+            session.close();
         }
     }
 }

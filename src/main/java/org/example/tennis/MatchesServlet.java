@@ -6,11 +6,14 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.hibernate.SessionFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
 @WebServlet("/matches")
 public class MatchesServlet extends HttpServlet {
+    private static final Logger logger = LoggerFactory.getLogger(MatchesServlet.class);
     private final SessionFactory sessionFactory = SessionFactoryManager.getInstance().getSessionFactory();
     private final MatchDao matchDao = new MatchDao();
     private final PlayerDao playerDao = new PlayerDao();
@@ -35,6 +38,7 @@ public class MatchesServlet extends HttpServlet {
         try {
             matchPage = matchPageViewService.getPage(page, playerNameFilter);
         } catch (IllegalPlayerNameFilterException e) {
+            logger.warn("incorrect playerNameFilter: {}", playerNameFilter);
             matchPage = matchPageViewService.getPage(page, null);
             ErrorDto error = errorDtoBuilder.build(e);
             response.setStatus(error.getStatusCode());

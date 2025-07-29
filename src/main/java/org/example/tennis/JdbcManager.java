@@ -13,8 +13,10 @@ public class JdbcManager {
             Driver driver = drivers.nextElement();
             try {
                 DriverManager.deregisterDriver(driver);
+                System.out.println("info: jdbc driver deregistered: " + driver.getClass().getName());
             } catch (SQLException e) {
-                e.printStackTrace();
+                System.out.println("error: error deregistering JDBC driver: " + driver.getClass().getName());
+                e.printStackTrace(System.out);
             }
         }
     }

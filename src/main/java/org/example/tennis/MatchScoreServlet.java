@@ -6,6 +6,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.hibernate.SessionFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Map;
@@ -13,6 +15,8 @@ import java.util.UUID;
 
 @WebServlet("/match-score")
 public class MatchScoreServlet extends HttpServlet {
+    private static final Logger logger = LoggerFactory.getLogger(MatchScoreServlet.class);
+
     private final SessionFactory sessionFactory = SessionFactoryManager.getInstance().getSessionFactory();
 
     private final OngoingMatchesService ongoingMatchesService = OngoingMatchesService.getInstance();
@@ -29,6 +33,8 @@ public class MatchScoreServlet extends HttpServlet {
 
     private final MatchProcessor matchProcessor = new MatchProcessor();
     private final PlayerProcessor playerProcessor = new PlayerProcessor();
+
+    private final ErrorDtoBuilder errorDtoBuilder = new ErrorDtoBuilder();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -47,10 +53,22 @@ public class MatchScoreServlet extends HttpServlet {
         String uuidParameter = request.getParameter("uuid");
         String scoredIdParameter = request.getParameter("scoredPlayerId");
 
-        matchValidator.validateUuid(uuidParameter);
-        UUID matchUuid = matchParser.parseUuid(uuidParameter);
-        playerValidator.validateId(scoredIdParameter);
-        int scoredId = playerParser.parseId(scoredIdParameter);
+        UUID matchUuid;
+        int scoredId;
+
+        try {
+            matchValidator.validateUuid(uuidParameter);
+            matchUuid = matchParser.parseUuid(uuidParameter);
+            playerValidator.validateId(scoredIdParameter);
+            scoredId = playerParser.parseId(scoredIdParameter);
+        } catch (IllegalArgumentException e) {
+            ErrorDto error = errorDtoBuilder.build(e);
+            response.setStatus(error.getStatusCode());
+            request.setAttribute("errorMessage", error.getMessage());
+            logger.warn("incorrect match uuid or scoredId: {} {}", uuidParameter, scoredIdParameter);
+            request.getRequestDispatcher("/WEB-INF/new-match.jsp").forward(request, response);
+            return;
+        }
 
         Map<UUID, MatchScoreModel> currentMatches = ongoingMatchesService.getCurrentMatches();
         MatchScoreModel currentMatch = matchProcessor.findMatch(currentMatches, matchUuid);
@@ -59,11 +77,13 @@ public class MatchScoreServlet extends HttpServlet {
 
         try {
             matchScoreCalculationService.scoring(currentMatch, scorerSide);
+            logger.info("match is scoring: first player id {}, second player id {}, scoring by id: {}", currentMatch.getFirstPlayerId(), currentMatch.getSecondPlayerId(), scoredIdParameter);
             request.setAttribute("match", currentMatch);
             response.sendRedirect(request.getContextPath() + "/match-score?uuid=" + matchUuid);
         } catch (MatchAlreadyFinishedException e) {
             FinishedMatchViewDto finishedMatch = finishedMatchProcessingService.handleFinishedMatch(currentMatch, scorerSide, sessionFactory, ongoingMatchesService, matchUuid);
             request.setAttribute("match", finishedMatch);
+            logger.info("match is finished: first player id {}, second player id {}", finishedMatch.getCurrentMatch().getFirstPlayerId(), finishedMatch.getCurrentMatch().getSecondPlayerId());
             request.getRequestDispatcher("/WEB-INF/match-result.jsp").forward(request, response);
         }
     }
