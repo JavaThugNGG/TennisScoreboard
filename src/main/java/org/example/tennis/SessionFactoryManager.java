@@ -23,7 +23,7 @@ public class SessionFactoryManager {
             return factory;
         } catch (Exception e) {
             logger.error("failed to create sessionFactory", e);
-            throw new RuntimeException("Ошибка при создании SessionFactory", e);
+            throw new RuntimeException("error while creating SessionFactory", e);
         }
     }
 
@@ -34,7 +34,7 @@ public class SessionFactoryManager {
     public void close() {
         if (sessionFactory != null && !sessionFactory.isClosed()) {
             sessionFactory.close();
-            System.out.println("SessionFactory закрыт.");
+            System.out.println("sessionFactory is closed.");
         }
     }
 }
