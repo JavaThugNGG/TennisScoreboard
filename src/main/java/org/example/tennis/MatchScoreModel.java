@@ -31,5 +31,21 @@ public class MatchScoreModel {
         this.firstPlayerId = firstPlayerId;
         this.secondPlayerId = secondPlayerId;
     }
+
+    public String getFirstPlayerDisplayPoints() {
+        return getDisplayPoints(firstPlayerPoints, firstPlayerAdvantage);
+    }
+
+    public String getSecondPlayerDisplayPoints() {
+        return getDisplayPoints(secondPlayerPoints, secondPlayerAdvantage);
+    }
+
+    private String getDisplayPoints(int points, boolean hasAdvantage) {
+        if (hasAdvantage) {
+            return "adv";
+        }
+
+        return String.valueOf(points);
+    }
 }
 

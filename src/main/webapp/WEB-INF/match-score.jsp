@@ -50,7 +50,7 @@
                     <td class="table-text">${match.firstPlayerId}</td>
                     <td class="table-text">${match.firstPlayerSets}</td>
                     <td class="table-text">${match.firstPlayerGames}</td>
-                    <td class="table-text">${match.firstPlayerPoints}</td>
+                    <td class="table-text">${match.firstPlayerDisplayPoints}</td>
                     <td class="table-text">
                         <form method="post" action="#">
                             <input type="hidden" name="uuid" value="${param.uuid}" />
@@ -63,7 +63,7 @@
                     <td class="table-text">${match.secondPlayerId}</td>
                     <td class="table-text">${match.secondPlayerSets}</td>
                     <td class="table-text">${match.secondPlayerGames}</td>
-                    <td class="table-text">${match.secondPlayerPoints}</td>
+                    <td class="table-text">${match.secondPlayerDisplayPoints}</td>
                     <td class="table-text">
                         <form method="post" action="#">
                             <input type="hidden" name="uuid" value="${param.uuid}" />
