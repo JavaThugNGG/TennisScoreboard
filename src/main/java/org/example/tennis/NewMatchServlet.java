@@ -36,21 +36,17 @@ public class NewMatchServlet extends HttpServlet {
         try {
             playerValidator.validateName(firstPlayerName);
             playerValidator.validateName(secondPlayerName);
+            MatchScoreModel matchScoreModel = matchPreparingService.persistPlayers(firstPlayerName, secondPlayerName);
+            UUID pastedMatchId = ongoingMatchesService.addMatch(matchScoreModel);
+            logger.info("match was created, id: {}, first player id: {}, second player id: {}", pastedMatchId, matchScoreModel.getFirstPlayerId(), matchScoreModel.getSecondPlayerId());
+            String contextPath = request.getContextPath();
+            response.sendRedirect(contextPath + "/match-score?uuid=" + pastedMatchId);
         } catch (IllegalPlayerNameException e) {
             ErrorDto error = errorDtoBuilder.build(e);
             response.setStatus(error.getStatusCode());
             request.setAttribute("errorMessage", error.getMessage());
             logger.warn("incorrect name of first or second player: {}, {}", firstPlayerName, secondPlayerName, e);
             request.getRequestDispatcher("/WEB-INF/new-match.jsp").forward(request, response);
-            return;
         }
-
-
-        MatchScoreModel matchScoreModel = matchPreparingService.persistPlayers(firstPlayerName, secondPlayerName);
-        UUID pastedMatchId = ongoingMatchesService.addMatch(matchScoreModel);
-        logger.info("match was created, id: {}, first player id: {}, second player id: {}", pastedMatchId, matchScoreModel.getFirstPlayerId(), matchScoreModel.getSecondPlayerId());
-
-        String contextPath = request.getContextPath();
-        response.sendRedirect(contextPath + "/match-score?uuid=" + pastedMatchId);
     }
 }
