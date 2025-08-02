@@ -16,7 +16,7 @@ public class SchedulerService {
             scheduler.shutdown();
             System.out.println("info: scheduler shutdown initiated");
             try {
-                if (!scheduler.awaitTermination(5, TimeUnit.SECONDS)) {
+                if (!scheduler.awaitTermination(1, TimeUnit.SECONDS)) {
                     System.out.println("warn: scheduler did not terminate within 10 seconds, forcing shutdown");
                     scheduler.shutdownNow();
                 } else {

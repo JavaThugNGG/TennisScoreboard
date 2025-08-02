@@ -21,7 +21,7 @@ public class MatchScoreServlet extends HttpServlet {
 
     private final OngoingMatchesService ongoingMatchesService = OngoingMatchesService.getInstance();
     private final MatchStateService matchStateService = new MatchStateService();
-    private final MatchScoreCalculationService matchScoreCalculationService = new MatchScoreCalculationService(matchStateService);
+    private final MatchScoreCalculationService matchScoreCalculationService = new MatchScoreCalculationService();
     private final MatchFinishingService matchFinishingService = new MatchFinishingService();
     private final FinishedMatchProcessingService finishedMatchProcessingService = new FinishedMatchProcessingService(matchFinishingService);
 
@@ -72,6 +72,7 @@ public class MatchScoreServlet extends HttpServlet {
 
         try {
             matchScoreCalculationService.scoring(currentMatch, scorerSide);
+            matchStateService.checkNotFinished(currentMatch);
             logger.info("match is scoring: first player id {}, second player id {}, scoring by id: {}", currentMatch.getFirstPlayerId(), currentMatch.getSecondPlayerId(), scorerIdParameter);
             response.sendRedirect(request.getContextPath() + "/match-score?uuid=" + matchUuid);
         } catch (MatchAlreadyFinishedException e) {
