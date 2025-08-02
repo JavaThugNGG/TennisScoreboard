@@ -20,7 +20,6 @@ public class AppLifecycleListener implements ServletContextListener {
         h2ServerManager.startServer();
         sessionFactoryManager = SessionFactoryManager.getInstance();
         ongoingMatchesService = OngoingMatchesService.getInstance();
-        ongoingMatchesService.startScheduler();
         logger.info("app has been initialized");
     }
 
