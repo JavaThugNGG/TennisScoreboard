@@ -87,7 +87,6 @@ public class MatchScoreServlet extends HttpServlet {
                 request.setAttribute("match", finishedMatch);
                 logger.info("match is finished: first player id {}, second player id {}", finishedMatch.getCurrentMatch().getFirstPlayerId(), finishedMatch.getCurrentMatch().getSecondPlayerId());
                 request.getRequestDispatcher("/WEB-INF/match-result.jsp").forward(request, response);
-                return;
             }
         }
         response.sendRedirect(request.getContextPath() + "/match-score?uuid=" + matchUuid);
