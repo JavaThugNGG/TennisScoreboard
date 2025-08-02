@@ -39,7 +39,7 @@ public class MatchesServlet extends HttpServlet {
             matchPage = matchPageViewService.getPage(page, playerNameFilter);
         } catch (IllegalPlayerNameFilterException e) {
             logger.warn("incorrect or empty playerNameFilter: {}", playerNameFilter);
-            matchPage = matchPageViewService.getPage(page, null);
+            matchPage = getPageWithoutFilter(page);
             ErrorDto error = errorDtoBuilder.build(e);
             response.setStatus(error.getStatusCode());
             request.setAttribute("errorMessage", error.getMessage());
@@ -47,6 +47,10 @@ public class MatchesServlet extends HttpServlet {
 
         request.setAttribute("matchPage", matchPage);
         request.getRequestDispatcher("/WEB-INF/matches.jsp").forward(request, response);
+    }
+
+    private MatchPageViewDto getPageWithoutFilter(String page) {
+        return matchPageViewService.getPage(page, null);
     }
 }
 
