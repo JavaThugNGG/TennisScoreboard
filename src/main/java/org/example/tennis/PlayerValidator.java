@@ -10,7 +10,7 @@ public class PlayerValidator {
         if (name.length() > MAX_PLAYER_NAME_LENGTH) {
             throw new IllegalPlayerNameException("Имя игрока слишком длинное. Максимум " + MAX_PLAYER_NAME_LENGTH + " символов.");
         }
-        if (!name.matches("[a-zA-Zа-яА-ЯёЁ\\- ]+")) {
+        if (!name.matches("[a-zA-Zа-яА-ЯёЁ ]+")) {
             throw new IllegalPlayerNameException("Имя игрока содержит недопустимые символы.");
         }
     }
