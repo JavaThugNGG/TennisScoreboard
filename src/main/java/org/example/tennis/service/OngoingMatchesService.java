@@ -2,7 +2,7 @@ package org.example.tennis.service;
 
 import lombok.Getter;
 import org.example.tennis.model.MatchScoreModel;
-import org.example.tennis.manager.SchedulerService;
+import org.example.tennis.manager.SchedulerManager;
 
 import java.util.Map;
 import java.util.UUID;
@@ -12,7 +12,7 @@ public class OngoingMatchesService {
     private static final OngoingMatchesService INSTANCE = new OngoingMatchesService();
     @Getter
     private final Map<UUID, MatchScoreModel> currentMatches;
-    private final SchedulerService schedulerService = new SchedulerService();
+    private final SchedulerManager schedulerService = new SchedulerManager();
 
     private OngoingMatchesService() {
         currentMatches = new ConcurrentHashMap<>();
