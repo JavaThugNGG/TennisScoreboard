@@ -1,0 +1,21 @@
+package org.example.tennis.processor;
+
+import org.example.tennis.model.MatchScoreModel;
+import org.example.tennis.PlayerSide;
+import org.example.tennis.exception.PlayerNotFoundException;
+
+public class PlayerProcessor {
+
+    public PlayerSide determineScorerSide(MatchScoreModel match, int scorerId) {
+        int firstPlayerId = match.getFirstPlayerId();
+        int secondPlayerId = match.getSecondPlayerId();
+
+        if (scorerId == firstPlayerId) {
+            return PlayerSide.FIRST;
+        } else if (scorerId == secondPlayerId) {
+            return PlayerSide.SECOND;
+        } else {
+            throw new PlayerNotFoundException("Игрок не найден. scorerId: " + scorerId);
+        }
+    }
+}

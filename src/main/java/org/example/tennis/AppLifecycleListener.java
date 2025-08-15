@@ -3,6 +3,10 @@ package org.example.tennis;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;
+import org.example.tennis.manager.H2ServerManager;
+import org.example.tennis.manager.JdbcManager;
+import org.example.tennis.manager.SessionFactoryManager;
+import org.example.tennis.service.OngoingMatchesService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

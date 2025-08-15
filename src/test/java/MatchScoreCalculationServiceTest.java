@@ -1,4 +1,7 @@
 import org.example.tennis.*;
+import org.example.tennis.model.MatchScoreModel;
+import org.example.tennis.model.MatchScoreModelWrapper;
+import org.example.tennis.service.MatchScoreCalculationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;

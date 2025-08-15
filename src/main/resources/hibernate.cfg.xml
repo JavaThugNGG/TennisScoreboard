@@ -17,7 +17,7 @@
         <property name="hibernate.hbm2ddl.auto">create-drop</property>
 
         <!-- Классы-сущности -->
-        <mapping class="org.example.tennis.MatchEntity"/>
-        <mapping class="org.example.tennis.PlayerEntity"/>
+        <mapping class="org.example.tennis.entity.MatchEntity"/>
+        <mapping class="org.example.tennis.entity.PlayerEntity"/>
     </session-factory>
 </hibernate-configuration>
