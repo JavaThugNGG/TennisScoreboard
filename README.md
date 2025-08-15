@@ -1,8 +1,5 @@
 # Tennis Scoreboard - Java Web Application
 
-<img width="1445" height="872" alt="image" src="https://github.com/user-attachments/assets/e44fcb13-a1a1-4166-a39b-ac9e7db4145b" />
-
-
 ## Описание
 
 Java Web-приложение для ведения учёта счёта в теннисных матчах. Приложение реализовано без использования фреймворков (в целях практики MVCS), полностью на Java Servlets, JSP, Hibernate (ORM), H2 (database).
@@ -79,9 +76,30 @@ mvn test
 
 * **Model** - `MatchScore`, `Player`, `Match`
 * **View** - JSP-шаблоны (HTML+JSP)
-* **Controller** - `MatchScoreController`, `NewMatchController`, `MatchesController`
-* **Service** - `MatchScoreCalculationService`, `OngoingMatchesService`, `FinishedMatchesPersistenceService`
+* **Controller** - `MatchScoreServlet`, `NewMatchServlet`, `MatchesServlet`
+* **Service** - `MatchScoreCalculationService`, `OngoingMatchesService`, `FinishedMatchesPersistenceService` и др.
 
 ---
 
-Успешного запуска проекта!
+## Скриншоты приложения
+
+<img width="1479" height="797" alt="image" src="https://github.com/user-attachments/assets/7edcc377-9de8-49a8-bd07-05dc5a5fd92a" />
+
+---
+
+<img width="1441" height="879" alt="image" src="https://github.com/user-attachments/assets/ff710011-360a-4d20-a2d0-db2f49663618" />
+
+&nbsp;
+&nbsp;
+
+---
+
+<img width="1450" height="905" alt="image" src="https://github.com/user-attachments/assets/07fbd825-0147-4de2-9f18-9d8b886d0919" />
+
+---
+
+<img width="1514" height="849" alt="image" src="https://github.com/user-attachments/assets/b2b1eeec-04a9-4bc1-bf6d-c8d536bc5e8a" />
+
+
+
+
